@@ -2,1182 +2,800 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>接口调试</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.14/lib/theme-chalk/index.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>婺源汽车钣金喷漆 | 客车 小汽车 钣金喷漆修复 - 婺源汽车站附近</title>
+  <meta name="description" content="婺源县汽车站附近汽修店，专业钣金、喷漆，主修客车，小汽车也修。电话 13517033606。">
+  <meta name="keywords" content="婺源汽修,婺源钣金,婺源喷漆,客车钣金,客车喷漆,上饶汽修,婺源汽车站">
+  <meta name="theme-color" content="#14213d">
   <style>
-    html, body{
-      height: 100%;
-      margin: 0;
+    :root{
+      --navy: #14213d;
+      --navy-2: #1f3060;
+      --orange: #f77f00;
+      --orange-dark: #d96f00;
+      --bg: #f5f6f8;
+      --text: #222;
+      --muted: #666;
+      --radius: 12px;
     }
+    *{ box-sizing: border-box; }
+    html{ scroll-behavior: smooth; }
     body{
-      background-color: #f0f2f5;
-      color: #303133;
-      font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
-      font-size: 14px;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      /* 给手机底部固定栏留位置 */
+      padding-bottom: 76px;
     }
-    [v-cloak]{
-      display: none;
+    a{ color: inherit; text-decoration: none; }
+    .container{
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
-
-    /* 铺满整个页面，响应区占满剩余高度 */
-    .api-tool{
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      bottom: 16px;
-      left: 16px;
-      display: flex;
-      flex-direction: column;
-      min-width: 640px;
-    }
-    .api-tool .tool-card{
-      border-radius: 8px;
-    }
-    .api-tool .request-card{
+    .icon{
+      width: 1.2em;
+      height: 1.2em;
       flex-shrink: 0;
-      margin-bottom: 16px;
-    }
-    .api-tool .request-card .el-card__body{
-      padding: 16px 18px 6px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    /* 请求栏：方法 + 地址合并为一个输入框，聚焦时整体高亮 */
-    .api-tool .request-line{
-      display: flex;
+    /* 按钮 */
+    .btn{
+      display: inline-flex;
       align-items: center;
-    }
-    .api-tool .request-bar{
-      flex: 1;
-      display: flex;
-      min-width: 0;
-      border: 1px solid #dcdfe6;
-      border-radius: 6px;
-      background-color: #fff;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .api-tool .request-bar:hover{
-      border-color: #c0c4cc;
-    }
-    .api-tool .request-bar:focus-within{
-      border-color: #409eff;
-      box-shadow: 0 0 0 3px rgba(64, 158, 255, .12);
-    }
-    .api-tool .request-bar .el-input__inner{
-      height: 36px;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
       border: none;
-      background-color: transparent;
-      line-height: 36px;
-    }
-    .api-tool .method{
-      flex-shrink: 0;
-      width: 112px;
-      border-right: 1px solid #ebeef5;
-      border-radius: 6px 0 0 6px;
-      background-color: #fafbfc;
-    }
-    .api-tool .method .el-input__inner{
-      padding-left: 14px;
-      font-weight: 700;
-      letter-spacing: .5px;
-    }
-    .api-tool .url{
-      flex: 1;
-    }
-    .api-tool .url .el-input__inner{
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 13px;
-    }
-    .api-tool .send-button{
-      flex-shrink: 0;
-      height: 38px;
-      margin-left: 10px;
-      padding: 0 22px;
-      border-radius: 6px;
+      border-radius: 999px;
+      font-size: 16px;
       font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      font-family: inherit;
     }
+    .btn:active{ transform: scale(.97); }
+    .btn-primary{ background: var(--orange); color: #fff; }
+    .btn-primary:hover{ background: var(--orange-dark); }
+    .btn-ghost{ background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.35); }
+    .btn-ghost:hover{ background: rgba(255,255,255,.2); }
+    .btn-light{ background: #fff; color: var(--navy); border: 1px solid #dde1e8; }
+    .btn-light:hover{ background: #f0f2f6; }
 
-    /* 请求方法颜色：下拉框挂在 body 上，选项单独用 popper-class 限定 */
-    .api-tool .method.is-get .el-input__inner,
-    .api-method-popper .method-option.is-get{
-      color: #18a058;
+    /* 顶部导航 */
+    .header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
     }
-    .api-tool .method.is-post .el-input__inner,
-    .api-method-popper .method-option.is-post{
-      color: #e6a23c;
-    }
-    .api-tool .method.is-put .el-input__inner,
-    .api-method-popper .method-option.is-put{
-      color: #409eff;
-    }
-    .api-tool .method.is-patch .el-input__inner,
-    .api-method-popper .method-option.is-patch{
-      color: #9b59b6;
-    }
-    .api-tool .method.is-delete .el-input__inner,
-    .api-method-popper .method-option.is-delete{
-      color: #f56c6c;
-    }
-    .api-method-popper .method-option{
-      font-weight: 700;
-      letter-spacing: .5px;
-    }
-
-    /* 请求参数标签页 */
-    .api-tool .request-tabs .el-tabs__header{
-      margin: 8px 0 12px;
-    }
-    .api-tool .request-tabs .el-tabs__nav-wrap::after{
-      height: 1px;
-      background-color: #f0f2f5;
-    }
-    .api-tool .request-tabs .el-tabs__item{
-      height: 38px;
-      padding: 0 16px;
-      line-height: 38px;
-      color: #606266;
-    }
-    .api-tool .request-tabs .el-tabs__item.is-active{
-      color: #409eff;
-      font-weight: 600;
-    }
-    .api-tool .request-tabs .el-tabs__content{
-      max-height: 180px;
-      padding-bottom: 10px;
-      overflow-y: auto;
-    }
-    .api-tool .badge{
-      display: inline-block;
-      min-width: 16px;
-      margin-left: 5px;
-      padding: 0 5px;
-      border-radius: 8px;
-      background-color: #ecf5ff;
-      color: #409eff;
-      font-size: 11px;
-      font-style: normal;
-      font-weight: normal;
-      line-height: 16px;
-      text-align: center;
-      box-sizing: border-box;
-    }
-    .api-tool .body-type{
+    .header .container{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 28px;
-      margin-bottom: 8px;
+      height: 60px;
     }
-    .api-tool .body-type .el-radio{
-      margin-right: 22px;
+    .logo{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
-    .api-tool .body-none{
-      padding: 18px 0;
-      border: 1px dashed #e4e7ed;
-      border-radius: 6px;
-      color: #909399;
-      font-size: 12px;
-      text-align: center;
+    .logo-mark{
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--orange);
     }
-    .api-tool .body-input .el-textarea__inner{
-      padding: 8px 12px;
-      border-color: #ebeef5;
-      border-radius: 6px;
-      resize: none;
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 13px;
-      line-height: 1.6;
+    .nav{
+      display: flex;
+      gap: 28px;
+      font-size: 15px;
+    }
+    .nav a{ opacity: .85; }
+    .nav a:hover{ opacity: 1; color: var(--orange); }
+    .header-call{
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: var(--orange);
+      font-size: 17px;
     }
 
-    /* 响应区 */
-    .api-tool .response-card{
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-    .api-tool .response-card .el-card__body{
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      padding: 0;
-    }
-    .api-tool .response-header{
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      height: 46px;
-      padding: 0 18px;
-      border-bottom: 1px solid #f0f2f5;
-      white-space: nowrap;
-    }
-    .api-tool .card-title{
-      font-weight: 600;
-    }
-    .api-tool .response-tabs{
-      display: flex;
-      align-self: stretch;
-      margin-left: 24px;
-    }
-    .api-tool .response-tab{
-      display: flex;
-      align-items: center;
-      margin-right: 22px;
-      border-bottom: 2px solid transparent;
-      color: #606266;
-      font-size: 13px;
-      cursor: pointer;
-      transition: color .2s, border-color .2s;
-    }
-    .api-tool .response-tab:hover{
-      color: #409eff;
-    }
-    .api-tool .response-tab.is-active{
-      border-bottom-color: #409eff;
-      color: #409eff;
-      font-weight: 600;
-    }
-    .api-tool .response-meta{
-      display: flex;
-      align-items: center;
-      margin-left: auto;
-    }
-    .api-tool .status{
-      display: flex;
-      align-items: center;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .api-tool .status-dot{
-      width: 6px;
-      height: 6px;
-      margin-right: 6px;
-      border-radius: 50%;
-      background-color: currentColor;
-    }
-    .api-tool .status.is-2xx{
-      background-color: #e8f7ee;
-      color: #18a058;
-    }
-    .api-tool .status.is-3xx{
-      background-color: #ecf5ff;
-      color: #409eff;
-    }
-    .api-tool .status.is-4xx{
-      background-color: #fdf6ec;
-      color: #e6a23c;
-    }
-    .api-tool .status.is-5xx,
-    .api-tool .status.is-1xx{
-      background-color: #fef0f0;
-      color: #f56c6c;
-    }
-    .api-tool .meta{
-      margin-left: 16px;
-      color: #606266;
-      font-size: 12px;
-    }
-    .api-tool .meta i{
-      margin-right: 4px;
-      color: #a8abb2;
-    }
-    .api-tool .response-main{
+    /* 首屏 */
+    .hero{
       position: relative;
-      flex: 1;
-      display: flex;
-      min-height: 0;
+      overflow: hidden;
+      color: #fff;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(247,127,0,.35), transparent 45%),
+        linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+      padding: 72px 0 80px;
     }
-    .api-tool .response-body{
-      flex: 1;
-      min-width: 0;
-      overflow: auto;
-    }
-    .api-tool .body-actions{
+    .hero::after{
+      /* 斜纹装饰，模拟喷漆房的质感 */
+      content: "";
       position: absolute;
-      top: 10px;
-      right: 22px;
-      z-index: 1;
+      inset: 0;
+      background: repeating-linear-gradient(-45deg, rgba(255,255,255,.03) 0 12px, transparent 12px 24px);
+      pointer-events: none;
+    }
+    .hero .container{ position: relative; z-index: 1; }
+    .hero-tag{
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(247,127,0,.18);
+      color: #ffb766;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+    .hero h1{
+      margin: 0 0 14px;
+      font-size: 44px;
+      line-height: 1.25;
+      letter-spacing: 2px;
+    }
+    .hero h1 em{
+      font-style: normal;
+      color: var(--orange);
+    }
+    .hero-sub{
+      margin: 0 0 28px;
+      font-size: 18px;
+      opacity: .9;
+    }
+    .hero-points{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+      margin: 0 0 32px;
+      padding: 0;
+      list-style: none;
+      font-size: 15px;
+      opacity: .9;
+    }
+    .hero-points li{
       display: flex;
       align-items: center;
-      padding: 3px 4px 3px 3px;
-      border: 1px solid #ebeef5;
-      border-radius: 6px;
-      background-color: rgba(255, 255, 255, .96);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+      gap: 6px;
     }
-    .api-tool .body-actions .el-button{
-      margin-left: 6px;
-      padding: 4px;
-      font-size: 14px;
+    .hero-points .icon{ color: var(--orange); }
+    .hero-actions{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
     }
-    .api-tool .body-actions .el-radio-group + .el-button,
-    .api-tool .body-actions .el-radio-group + span{
-      margin-left: 4px;
+    .hero-phone{
+      margin-top: 24px;
+      font-size: 15px;
+      opacity: .85;
+    }
+    .hero-phone strong{
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: #fff;
     }
 
-    /* 空状态与错误提示 */
-    .api-tool .response-empty{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      min-height: 120px;
-      padding: 0 24px;
+    /* 通用区块 */
+    .section{ padding: 64px 0; }
+    .section-white{ background: #fff; }
+    .section-title{
       text-align: center;
-      box-sizing: border-box;
+      margin: 0 0 8px;
+      font-size: 30px;
+      color: var(--navy);
     }
-    .api-tool .empty-icon{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px;
-      height: 56px;
-      margin-bottom: 12px;
-      border-radius: 50%;
-      background-color: #f0f6ff;
-      color: #79bbff;
+    .section-desc{
+      text-align: center;
+      margin: 0 0 40px;
+      color: var(--muted);
+    }
+
+    /* 服务项目 */
+    .services{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .service-card{
+      position: relative;
+      padding: 28px 22px;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 16px rgba(20,33,61,.06);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .service-card:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(20,33,61,.12);
+    }
+    .service-card.featured{ border-top: 4px solid var(--orange); }
+    .service-badge{
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 12px;
+    }
+    .service-icon{
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      background: #fff3e6;
+      color: var(--orange);
       font-size: 26px;
     }
-    .api-tool .empty-title{
-      color: #303133;
+    .service-card h3{
+      margin: 0 0 8px;
+      font-size: 19px;
+      color: var(--navy);
+    }
+    .service-card p{
+      margin: 0 0 12px;
+      color: var(--muted);
       font-size: 14px;
-      font-weight: 600;
     }
-    .api-tool .empty-desc{
-      max-width: 480px;
-      margin-top: 6px;
-      color: #909399;
-      font-size: 12px;
-      line-height: 1.6;
-      word-break: break-all;
-    }
-    .api-tool .response-empty.is-error .empty-icon{
-      background-color: #fef0f0;
-      color: #f56c6c;
-    }
-    .api-tool .response-empty.is-error .empty-desc{
-      color: #f56c6c;
-    }
-
-    /* 响应内容 */
-    .api-tool .response-text{
+    .service-card ul{
       margin: 0;
-      padding: 12px 18px;
-      white-space: pre-wrap;
-      word-break: break-all;
-      color: #303133;
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 13px;
-      line-height: 1.6;
+      padding-left: 18px;
+      color: #444;
+      font-size: 14px;
     }
-    .api-tool .response-tree{
-      padding: 12px 14px;
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 13px;
-      line-height: 1.6;
+
+    /* 为什么选我们 */
+    .reasons{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
     }
-    .api-tool .response-image{
-      padding: 20px;
+    .reason{
       text-align: center;
+      padding: 24px 16px;
     }
-    .api-tool .response-image img{
-      max-width: 100%;
-      border-radius: 4px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+    .reason-icon{
+      display: grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 28px;
     }
-    .api-tool .response-headers{
-      margin: 12px 18px;
-      overflow: hidden;
-      border: 1px solid #ebeef5;
-      border-radius: 6px;
-      font-size: 13px;
+    .reason h3{
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: var(--navy);
     }
-    .api-tool .header-row{
+    .reason p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* 维修流程 */
+    .steps{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      counter-reset: step;
+    }
+    .step{
+      position: relative;
+      padding: 26px 20px 22px;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 16px rgba(20,33,61,.06);
+    }
+    .step::before{
+      counter-increment: step;
+      content: counter(step);
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 700;
+    }
+    .step h3{
+      margin: 0 0 6px;
+      font-size: 17px;
+      color: var(--navy);
+    }
+    .step p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* 联系我们 */
+    .contact{
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+    }
+    .contact-card{
+      padding: 32px 28px;
+      border-radius: var(--radius);
+      background: var(--navy);
+      color: #fff;
+    }
+    .contact-card h3{
+      margin: 0 0 22px;
+      font-size: 22px;
+    }
+    .contact-item{
       display: flex;
-      padding: 7px 12px;
-      cursor: pointer;
+      gap: 14px;
+      margin-bottom: 20px;
     }
-    .api-tool .header-row + .header-row{
-      border-top: 1px solid #f0f2f5;
+    .contact-item .icon{
+      width: 24px;
+      height: 24px;
+      margin-top: 2px;
+      color: var(--orange);
     }
-    .api-tool .header-row:nth-child(even){
-      background-color: #fafbfc;
+    .contact-item .label{
+      font-size: 13px;
+      opacity: .7;
     }
-    .api-tool .header-row:hover{
-      background-color: #f2f8ff;
-    }
-    .api-tool .header-key{
-      flex-shrink: 0;
-      width: 200px;
-      padding-right: 12px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: #606266;
+    .contact-item .value{
+      font-size: 17px;
       font-weight: 600;
     }
-    .api-tool .header-value{
-      flex: 1;
-      min-width: 0;
-      white-space: pre-wrap;
-      word-break: break-all;
-      color: #303133;
-      font-family: Consolas, "Courier New", monospace;
+    .contact-item .value.phone{
+      font-size: 26px;
+      letter-spacing: 1px;
+      color: var(--orange);
     }
-
-    /* JSON 树形展示 */
-    .json-line{
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-    .json-line:hover{
-      background-color: #f5f7fa;
-    }
-    .json-toggle{
-      width: 16px;
-      color: #909399;
-      cursor: pointer;
-    }
-    .json-collapsed{
-      margin: 0 4px;
-      padding: 0 6px;
-      border-radius: 3px;
-      background-color: #f0f2f5;
-      color: #909399;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .json-key{
-      color: #92278f;
-    }
-    .json-string{
-      color: #3ab54a;
-    }
-    .json-number{
-      color: #25aae2;
-    }
-    .json-boolean{
-      color: #f98280;
-    }
-    .json-null{
-      color: #f1592a;
-    }
-
-    /* 键值对表格：带网格线，输入框去掉边框，聚焦的单元格浅蓝高亮 */
-    .kv-editor{
-      overflow: hidden;
-      border: 1px solid #ebeef5;
-      border-radius: 6px;
-    }
-    .kv-editor .kv-row{
+    .contact-actions{
       display: flex;
-      align-items: stretch;
-      transition: background-color .15s;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
     }
-    .kv-editor .kv-row + .kv-row{
-      border-top: 1px solid #ebeef5;
-    }
-    .kv-editor .kv-row:not(.kv-head):hover{
-      background-color: #fafbfc;
-    }
-    .kv-editor .kv-head{
-      height: 30px;
-      background-color: #f7f8fa;
-      color: #909399;
-      font-size: 12px;
-      line-height: 30px;
-    }
-    .kv-editor .kv-head .kv-key,
-    .kv-editor .kv-head .kv-value{
-      padding-left: 12px;
-    }
-    .kv-editor .kv-check{
+    .map-card{
       display: flex;
-      flex-shrink: 0;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      width: 36px;
-      color: #c0c4cc;
-      font-size: 12px;
+      padding: 32px 28px;
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(20,33,61,.06);
     }
-    .kv-editor .kv-key{
-      flex: 2;
-      min-width: 0;
-      border-left: 1px solid #ebeef5;
-      border-right: 1px solid #ebeef5;
+    .map-card h3{
+      margin: 0 0 6px;
+      font-size: 20px;
+      color: var(--navy);
     }
-    .kv-editor .kv-value{
-      flex: 3;
-      min-width: 0;
+    .map-card p{
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
     }
-    .kv-editor .kv-key .el-autocomplete{
-      display: block;
-      width: 100%;
+    .map-links{
+      display: grid;
+      gap: 12px;
     }
-    .kv-editor .el-input__inner{
-      height: 32px;
-      padding: 0 12px;
-      border: none;
-      border-radius: 0;
-      background-color: transparent;
-      line-height: 32px;
+    .map-links .btn{ width: 100%; border-radius: 10px; }
+
+    /* 页脚 */
+    .footer{
+      padding: 28px 0;
+      background: #0e1830;
+      color: rgba(255,255,255,.6);
+      text-align: center;
       font-size: 13px;
     }
-    .kv-editor .el-input__inner:focus{
-      background-color: #f2f8ff;
+    .footer p{ margin: 4px 0; }
+
+    /* 手机底部固定联系栏 */
+    .bottom-bar{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      display: none;
+      grid-template-columns: 1fr 1fr 1.4fr;
+      background: #fff;
+      box-shadow: 0 -2px 12px rgba(0,0,0,.1);
+      padding-bottom: env(safe-area-inset-bottom);
     }
-    .kv-editor .kv-action{
+    .bottom-bar a,
+    .bottom-bar button{
       display: flex;
-      flex-shrink: 0;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      border-left: 1px solid #ebeef5;
-    }
-    .kv-editor .kv-action i{
-      color: #c0c4cc;
-      opacity: 0;
+      gap: 2px;
+      height: 60px;
+      border: none;
+      background: none;
+      color: var(--navy);
+      font-size: 13px;
+      font-family: inherit;
       cursor: pointer;
-      transition: opacity .15s, color .15s;
     }
-    .kv-editor .kv-row:hover .kv-action i{
+    .bottom-bar .bar-call{
+      flex-direction: row;
+      gap: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    /* 提示 */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 110px;
+      z-index: 100;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: rgba(0,0,0,.8);
+      color: #fff;
+      font-size: 14px;
+      opacity: 0;
+      transform: translate(-50%, 10px);
+      transition: opacity .25s, transform .25s;
+      pointer-events: none;
+    }
+    .toast.show{
       opacity: 1;
+      transform: translate(-50%, 0);
     }
-    .kv-editor .kv-action i:hover{
-      color: #f56c6c;
+
+    /* 平板 */
+    @media (max-width: 900px){
+      .services, .reasons, .steps{ grid-template-columns: repeat(2, 1fr); }
+      .contact{ grid-template-columns: 1fr; }
+      .nav{ display: none; }
     }
-    .kv-editor .is-disabled .el-input__inner{
-      color: #c0c4cc;
-      text-decoration: line-through;
+    /* 手机 */
+    @media (max-width: 600px){
+      .header .container{ height: 54px; }
+      .logo{ font-size: 16px; }
+      .header-call span{ display: none; }
+      .hero{ padding: 48px 0 56px; }
+      .hero h1{ font-size: 30px; }
+      .hero-sub{ font-size: 16px; }
+      .hero-actions .btn{ flex: 1; }
+      .section{ padding: 48px 0; }
+      .section-title{ font-size: 24px; }
+      .section-desc{ margin-bottom: 28px; }
+      .services, .steps{ grid-template-columns: 1fr; }
+      .reasons{ grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .reason{ padding: 16px 8px; }
+      .contact-card, .map-card{ padding: 26px 20px; }
+      .bottom-bar{ display: grid; }
+    }
+    @media (min-width: 601px){
+      body{ padding-bottom: 0; }
     }
   </style>
 </head>
 <body>
-  <div id="app" v-cloak></div>
 
-  <script type="text/x-template" id="json-node-template">
-    <div class="json-node">
-      <div class="json-line" :style="indentStyle">
-        <i v-if="isContainer" :class="open ? 'el-icon-caret-bottom' : 'el-icon-caret-right'" class="json-toggle" @click="open = !open"></i>
-        <template v-if="name !== undefined"><span class="json-key">{{ JSON.stringify(name) }}</span>: </template>
-        <template v-if="isContainer">
-          <span>{{ brackets[0] }}</span>
-          <template v-if="!open">
-            <span class="json-collapsed" @click="open = true">{{ keys.length }} 项</span><span>{{ brackets[1] }}</span><span v-if="!last">,</span>
-          </template>
-        </template>
-        <template v-else>
-          <span :class="`json-${type}`">{{ text }}</span><span v-if="!last">,</span>
-        </template>
-      </div>
-      <template v-if="isContainer && open">
-        <json-node
-          v-for="(key, index) in keys"
-          :key="key"
-          :name="isArray ? undefined : key"
-          :value="value[key]"
-          :last="index === keys.length - 1"
-          :depth="depth + 1"
-          :command="command"
-        ></json-node>
-        <div class="json-line" :style="closeIndentStyle">
-          <span>{{ brackets[1] }}</span><span v-if="!last">,</span>
-        </div>
-      </template>
+  <!-- SVG 图标 -->
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-nav" viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <symbol id="i-spray" viewBox="0 0 24 24"><path d="M8 10h8v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10z"/><path d="M10 10V6h4v4"/><path d="M14 4h2"/><path d="M18 2v.01M20 4v.01M18 6v.01M21 2v.01M21 6v.01"/></symbol>
+    <symbol id="i-bus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="15" rx="2"/><path d="M3 11h18M8 3v8M16 3v8"/><circle cx="7.5" cy="20" r="1.5"/><circle cx="16.5" cy="20" r="1.5"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><path d="M3 12h18"/><circle cx="7.5" cy="17.5" r="2"/><circle cx="16.5" cy="17.5" r="2"/><path d="M9.5 17.5h5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"/></symbol>
+    <symbol id="i-yuan" viewBox="0 0 24 24"><path d="M6 3l6 8 6-8M12 11v10M7 13h10M7 17h10"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  </svg>
+
+  <!-- 顶部导航 -->
+  <header class="header">
+    <div class="container">
+      <a href="#top" class="logo">
+        <span class="logo-mark"><svg class="icon"><use href="#i-wrench"/></svg></span>
+        婺源汽车钣金喷漆
+      </a>
+      <nav class="nav">
+        <a href="#services">服务项目</a>
+        <a href="#reasons">为什么选我们</a>
+        <a href="#steps">维修流程</a>
+        <a href="#contact">联系我们</a>
+      </nav>
+      <a href="tel:13517033606" class="header-call">
+        <svg class="icon"><use href="#i-phone"/></svg>
+        <span>135 1703 3606</span>
+      </a>
     </div>
-  </script>
+  </header>
 
-  <script type="text/x-template" id="key-value-editor-template">
-    <div class="kv-editor">
-      <div class="kv-row kv-head">
-        <span class="kv-check"></span>
-        <span class="kv-key">{{ keyLabel }}</span>
-        <span class="kv-value">值</span>
-        <span class="kv-action"></span>
+  <!-- 首屏 -->
+  <section class="hero" id="top">
+    <div class="container">
+      <span class="hero-tag">婺源县汽车站附近 · 本地老店</span>
+      <h1>专业<em>钣金 · 喷漆</em><br>客车主修，小汽车也修</h1>
+      <p class="hero-sub">剐蹭、凹陷、掉漆、事故修复，整车翻新喷漆，修好再提车。</p>
+      <ul class="hero-points">
+        <li><svg class="icon"><use href="#i-check"/></svg>客车大车经验足</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>调色准 不色差</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>先看车 后报价</li>
+      </ul>
+      <div class="hero-actions">
+        <a href="tel:13517033606" class="btn btn-primary">
+          <svg class="icon"><use href="#i-phone"/></svg>一键拨打电话
+        </a>
+        <a href="#contact" class="btn btn-ghost">
+          <svg class="icon"><use href="#i-map"/></svg>查看地址
+        </a>
       </div>
-      <div
-        v-for="(row, index) in rows"
-        :key="row.id"
-        :class="{ 'is-disabled': !row.enabled }"
-        class="kv-row"
-      >
-        <span class="kv-check">
-          <el-checkbox v-if="index < rows.length - 1" v-model="row.enabled"></el-checkbox>
-          <i v-else class="el-icon-plus"></i>
-        </span>
-        <span class="kv-key">
-          <el-autocomplete
-            v-if="suggestions"
-            v-model="row.key"
-            :fetch-suggestions="querySuggestions"
-            :placeholder="index === rows.length - 1 ? `添加${keyLabel}` : keyLabel"
-            size="small"
-            @input="touch(index)"
-          ></el-autocomplete>
-          <el-input
-            v-else
-            v-model="row.key"
-            :placeholder="index === rows.length - 1 ? `添加${keyLabel}` : keyLabel"
-            size="small"
-            @input="touch(index)"
-          ></el-input>
-        </span>
-        <span class="kv-value">
-          <el-input v-model="row.value" size="small" placeholder="值" @input="touch(index)"></el-input>
-        </span>
-        <span class="kv-action">
-          <i v-if="index < rows.length - 1" class="el-icon-delete" title="删除" @click="rows.splice(index, 1)"></i>
-        </span>
+      <p class="hero-phone">联系电话：<strong>135 1703 3606</strong></p>
+    </div>
+  </section>
+
+  <!-- 服务项目 -->
+  <section class="section" id="services">
+    <div class="container">
+      <h2 class="section-title">服务项目</h2>
+      <p class="section-desc">钣金喷漆一站搞定，大车小车都能修</p>
+      <div class="services">
+        <div class="service-card featured">
+          <span class="service-badge">主营</span>
+          <div class="service-icon"><svg class="icon"><use href="#i-bus"/></svg></div>
+          <h3>客车钣金喷漆</h3>
+          <p>大巴、中巴、公交车、旅游客车</p>
+          <ul>
+            <li>车身凹陷、撞击修复</li>
+            <li>侧围、前后围钣金</li>
+            <li>整车喷漆翻新、改色</li>
+          </ul>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><svg class="icon"><use href="#i-car"/></svg></div>
+          <h3>小汽车钣金喷漆</h3>
+          <p>轿车、SUV、面包车、货车</p>
+          <ul>
+            <li>剐蹭、划痕修补</li>
+            <li>保险杠、车门修复</li>
+            <li>局部补漆、整车喷漆</li>
+          </ul>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><svg class="icon"><use href="#i-wrench"/></svg></div>
+          <h3>钣金修复</h3>
+          <p>恢复车身原有线条和结构</p>
+          <ul>
+            <li>凹陷整形、拉伸校正</li>
+            <li>事故车修复</li>
+            <li>锈蚀、破损部位焊补</li>
+          </ul>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><svg class="icon"><use href="#i-spray"/></svg></div>
+          <h3>喷漆烤漆</h3>
+          <p>电脑调色，颜色还原度高</p>
+          <ul>
+            <li>划痕、掉漆补漆</li>
+            <li>单面、多面喷漆</li>
+            <li>整车翻新、改色</li>
+          </ul>
+        </div>
       </div>
     </div>
-  </script>
+  </section>
 
-  <script type="text/x-template" id="api-tool-template">
-    <div class="api-tool">
-      <el-card shadow="never" class="tool-card request-card">
-        <div class="request-line">
-          <!-- 请求方法和地址合并成一个输入框 -->
-          <div class="request-bar">
-            <el-select v-model="method" :class="`is-${method.toLowerCase()}`" class="method" popper-class="api-method-popper">
-              <el-option v-for="item in methods" :key="item" :label="item" :value="item">
-                <span :class="`is-${item.toLowerCase()}`" class="method-option">{{ item }}</span>
-              </el-option>
-            </el-select>
-            <el-input
-              v-model="url"
-              placeholder="输入请求地址，例如 https://api.example.com/users，回车发送"
-              class="url"
-              @blur="splitQuery"
-              @keyup.enter.native="send"
-            ></el-input>
-          </div>
-          <el-button v-if="!loading" type="primary" icon="el-icon-s-promotion" class="send-button" @click="send">发送</el-button>
-          <el-button v-else type="danger" plain icon="el-icon-close" class="send-button" @click="cancel">取消</el-button>
+  <!-- 为什么选我们 -->
+  <section class="section section-white" id="reasons">
+    <div class="container">
+      <h2 class="section-title">为什么选我们</h2>
+      <p class="section-desc">本地店面，老板亲自动手，修得放心</p>
+      <div class="reasons">
+        <div class="reason">
+          <div class="reason-icon"><svg class="icon"><use href="#i-bus"/></svg></div>
+          <h3>擅长大车</h3>
+          <p>长期修客车，大面积钣金喷漆有经验</p>
         </div>
-        <el-tabs v-model="requestTab" class="request-tabs">
-          <el-tab-pane name="params">
-            <span slot="label">参数<em v-if="countOf(params)" class="badge">{{ countOf(params) }}</em></span>
-            <key-value-editor :rows="params" key-label="参数名"></key-value-editor>
-          </el-tab-pane>
-          <el-tab-pane name="headers">
-            <span slot="label">请求头<em v-if="countOf(headers)" class="badge">{{ countOf(headers) }}</em></span>
-            <key-value-editor :rows="headers" :suggestions="headerSuggestions" key-label="请求头"></key-value-editor>
-          </el-tab-pane>
-          <el-tab-pane name="body">
-            <span slot="label">请求体<em v-if="bodyType !== 'none'" class="badge">{{ bodyTypes[bodyType] }}</em></span>
-            <div class="body-type">
-              <el-radio-group v-model="bodyType">
-                <el-radio v-for="(label, type) in bodyTypes" :key="type" :label="type">{{ label }}</el-radio>
-              </el-radio-group>
-              <el-button v-if="bodyType === 'json'" type="text" size="mini" icon="el-icon-s-operation" :disabled="!body.trim()" @click="formatBody">格式化</el-button>
-            </div>
-            <div v-if="bodyType === 'none'" class="body-none">该请求没有请求体</div>
-            <key-value-editor v-else-if="bodyType === 'form'" :rows="form" key-label="字段名"></key-value-editor>
-            <el-input
-              v-else
-              v-model="body"
-              type="textarea"
-              :rows="5"
-              :placeholder="bodyType === 'json' ? '{ &quot;name&quot;: &quot;value&quot; }' : '纯文本内容'"
-              spellcheck="false"
-              class="body-input"
-            ></el-input>
-          </el-tab-pane>
-        </el-tabs>
-      </el-card>
-
-      <el-card shadow="never" class="tool-card response-card">
-        <div class="response-header">
-          <span class="card-title">响应</span>
-          <div v-if="response" class="response-tabs">
-            <span :class="{ 'is-active': responseTab === 'body' }" class="response-tab" @click="responseTab = 'body'">响应体</span>
-            <span :class="{ 'is-active': responseTab === 'headers' }" class="response-tab" @click="responseTab = 'headers'">
-              响应头<em class="badge">{{ response.headers.length }}</em>
-            </span>
-          </div>
-          <div v-if="response" class="response-meta">
-            <span :class="statusClass" class="status"><i class="status-dot"></i>{{ response.status }} {{ response.statusText }}</span>
-            <span class="meta" title="耗时"><i class="el-icon-time"></i>{{ response.time }} ms</span>
-            <span class="meta" title="大小"><i class="el-icon-coin"></i>{{ formatSize(response.size) }}</span>
-          </div>
+        <div class="reason">
+          <div class="reason-icon"><svg class="icon"><use href="#i-palette"/></svg></div>
+          <h3>颜色还原</h3>
+          <p>精细调色，修补处与原车漆一致</p>
         </div>
-
-        <div v-loading="loading" element-loading-text="请求中…" class="response-main">
-          <!-- 悬浮在响应内容右上角的工具条 -->
-          <div v-if="showBodyActions" class="body-actions">
-            <el-radio-group v-if="response.type === 'json'" v-model="view" size="mini">
-              <el-radio-button label="tree">树形</el-radio-button>
-              <el-radio-button label="text">文本</el-radio-button>
-            </el-radio-group>
-            <template v-if="response.type === 'json' && view === 'tree'">
-              <el-tooltip content="全部展开" placement="top" :open-delay="300">
-                <el-button type="text" size="mini" icon="el-icon-s-unfold" @click="command = { open: true }"></el-button>
-              </el-tooltip>
-              <el-tooltip content="全部折叠" placement="top" :open-delay="300">
-                <el-button type="text" size="mini" icon="el-icon-s-fold" @click="command = { open: false }"></el-button>
-              </el-tooltip>
-            </template>
-            <el-tooltip content="复制响应内容" placement="top" :open-delay="300">
-              <el-button type="text" size="mini" icon="el-icon-copy-document" @click="copy(response.text)"></el-button>
-            </el-tooltip>
-          </div>
-          <div class="response-body">
-            <div v-if="error" class="response-empty is-error">
-              <span class="empty-icon"><i class="el-icon-warning-outline"></i></span>
-              <div class="empty-title">请求失败</div>
-              <div class="empty-desc">{{ error }}</div>
-            </div>
-            <div v-else-if="!response" class="response-empty">
-              <span class="empty-icon"><i class="el-icon-s-promotion"></i></span>
-              <div class="empty-title">还没有发送请求</div>
-              <div class="empty-desc">填写地址后点击「发送」，或在地址栏按回车。请求由浏览器发出，目标接口需允许跨域（CORS）</div>
-            </div>
-            <div v-else-if="responseTab === 'headers'" class="response-headers">
-              <div v-for="item in response.headers" :key="item.key" class="header-row" title="点击复制" @click="copy(`${item.key}: ${item.value}`)">
-                <span class="header-key">{{ item.key }}</span>
-                <span class="header-value">{{ item.value }}</span>
-              </div>
-            </div>
-            <div v-else-if="response.type === 'image'" class="response-image">
-              <img :src="response.url" alt="响应图片">
-            </div>
-            <div v-else-if="response.type === 'json' && view === 'tree'" class="response-tree">
-              <json-node :key="responseId" :value="response.data" :command="command"></json-node>
-            </div>
-            <pre v-else class="response-text">{{ response.text || '（响应体为空）' }}</pre>
-          </div>
+        <div class="reason">
+          <div class="reason-icon"><svg class="icon"><use href="#i-yuan"/></svg></div>
+          <h3>价格透明</h3>
+          <p>先看车再报价，说好的价不乱加</p>
         </div>
-      </el-card>
+        <div class="reason">
+          <div class="reason-icon"><svg class="icon"><use href="#i-user"/></svg></div>
+          <h3>老板亲修</h3>
+          <p>老板亲自上手，活儿干得仔细</p>
+        </div>
+      </div>
     </div>
-  </script>
+  </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.14/lib/index.js"></script>
+  <!-- 维修流程 -->
+  <section class="section" id="steps">
+    <div class="container">
+      <h2 class="section-title">维修流程</h2>
+      <p class="section-desc">简单四步，省心修车</p>
+      <div class="steps">
+        <div class="step">
+          <h3>电话联系</h3>
+          <p>打电话说一下车型和损伤情况，先大概了解。</p>
+        </div>
+        <div class="step">
+          <h3>到店看车</h3>
+          <p>把车开到店里，现场查看损伤，给出报价。</p>
+        </div>
+        <div class="step">
+          <h3>钣金喷漆</h3>
+          <p>确认价格后开工，钣金整形、打磨、调色、喷漆。</p>
+        </div>
+        <div class="step">
+          <h3>验车提车</h3>
+          <p>修好后当面验车，满意再付款提车。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系我们 -->
+  <section class="section section-white" id="contact">
+    <div class="container">
+      <h2 class="section-title">联系我们</h2>
+      <p class="section-desc">修车前建议先打个电话，确认师傅在店</p>
+      <div class="contact">
+        <div class="contact-card">
+          <h3>婺源汽车钣金喷漆</h3>
+          <div class="contact-item">
+            <svg class="icon"><use href="#i-phone"/></svg>
+            <div>
+              <div class="label">联系电话</div>
+              <a href="tel:13517033606" class="value phone">135 1703 3606</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <svg class="icon"><use href="#i-map"/></svg>
+            <div>
+              <div class="label">店铺地址</div>
+              <div class="value">江西省上饶市婺源县汽车站附近</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <svg class="icon"><use href="#i-clock"/></svg>
+            <div>
+              <div class="label">营业时间</div>
+              <div class="value">每天 8:00 - 18:00（来前请电话确认）</div>
+            </div>
+          </div>
+          <div class="contact-actions">
+            <a href="tel:13517033606" class="btn btn-primary">
+              <svg class="icon"><use href="#i-phone"/></svg>拨打电话
+            </a>
+            <button type="button" class="btn btn-ghost js-copy">
+              <svg class="icon"><use href="#i-copy"/></svg>复制号码
+            </button>
+          </div>
+        </div>
+
+        <div class="map-card">
+          <h3>导航到店</h3>
+          <p>在婺源县汽车站附近，到了找不到可直接打电话，我们出来接你。</p>
+          <div class="map-links">
+            <a class="btn btn-light" target="_blank" rel="noopener"
+               href="https://uri.amap.com/search?keyword=%E5%A9%BA%E6%BA%90%E5%8E%BF%E6%B1%BD%E8%BD%A6%E7%AB%99&city=%E4%B8%8A%E9%A5%B6&src=wuyuan-repair&callnative=1">
+              <svg class="icon"><use href="#i-nav"/></svg>用高德地图导航
+            </a>
+            <a class="btn btn-light" target="_blank" rel="noopener"
+               href="https://api.map.baidu.com/geocoder?address=%E6%B1%9F%E8%A5%BF%E7%9C%81%E4%B8%8A%E9%A5%B6%E5%B8%82%E5%A9%BA%E6%BA%90%E5%8E%BF%E6%B1%BD%E8%BD%A6%E7%AB%99&output=html&src=wuyuan-repair">
+              <svg class="icon"><use href="#i-nav"/></svg>用百度地图导航
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <p>婺源汽车钣金喷漆 · 客车钣金喷漆 · 小汽车钣金喷漆</p>
+      <p>地址：江西省上饶市婺源县汽车站附近 &nbsp;|&nbsp; 电话：135 1703 3606</p>
+    </div>
+  </footer>
+
+  <!-- 手机底部固定联系栏 -->
+  <div class="bottom-bar">
+    <a href="#contact">
+      <svg class="icon"><use href="#i-map"/></svg>地址
+    </a>
+    <button type="button" class="js-copy">
+      <svg class="icon"><use href="#i-copy"/></svg>复制号码
+    </button>
+    <a href="tel:13517033606" class="bar-call">
+      <svg class="icon"><use href="#i-phone"/></svg>打电话
+    </a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script>
-    // ---------- 工具函数 ----------
+    var PHONE = '13517033606';
+    var toastTimer = null;
 
-    function formatSize(size) {
-      if (size < 1024) return `${size} B`;
-      if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-      return `${(size / 1024 / 1024).toFixed(2)} MB`;
+    function showToast(text){
+      var toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){
+        toast.classList.remove('show');
+      }, 2000);
     }
 
-    // 解析 JSON，出错时把 "at position N" 换算成行列号
-    function parseJson(text) {
-      try {
-        return { data: JSON.parse(text) };
-      } catch (e) {
-        const match = /position (\d+)/.exec(e.message);
-        if (!match) return { error: e.message };
-        const position = Number(match[1]);
-        const lines = text.slice(0, position).split('\n');
-        return {
-          error: `第 ${lines.length} 行第 ${lines[lines.length - 1].length + 1} 列：${e.message}`,
-          position
-        };
+    // 微信内置浏览器等环境可能不支持 clipboard API，降级用 execCommand
+    function copyPhone(){
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(PHONE).then(function(){
+          showToast('号码已复制：' + PHONE);
+        }, fallbackCopy);
+      }else{
+        fallbackCopy();
       }
     }
 
-    let rowId = 0;
-
-    // 键值对表格的一行（参数、请求头、表单共用）
-    function createRow(key = '', value = '', enabled = true) {
-      return { id: ++rowId, enabled, key, value };
-    }
-
-    // 恢复保存的数据，并保证末尾有一行空行用于继续输入
-    function restoreRows(rows) {
-      const result = (rows || []).filter(row => row.key || row.value).map(row => createRow(row.key, row.value, row.enabled));
-      result.push(createRow());
-      return result;
-    }
-
-    function enabledPairs(rows) {
-      return rows.filter(row => row.enabled && row.key.trim());
-    }
-
-    function decode(text) {
-      try {
-        return decodeURIComponent(text.replace(/\+/g, ' '));
-      } catch (e) {
-        return text;
+    function fallbackCopy(){
+      var input = document.createElement('textarea');
+      input.value = PHONE;
+      input.setAttribute('readonly', '');
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.select();
+      try{
+        document.execCommand('copy');
+        showToast('号码已复制：' + PHONE);
+      }catch(e){
+        showToast('复制失败，请长按号码手动复制');
       }
+      document.body.removeChild(input);
     }
 
-    function parseQuery(query) {
-      return query.split('&').filter(Boolean).map((item) => {
-        const index = item.indexOf('=');
-        return index === -1 ? { key: decode(item), value: '' } : { key: decode(item.slice(0, index)), value: decode(item.slice(index + 1)) };
-      });
-    }
-
-    function encodePairs(pairs) {
-      return pairs.map(({ key, value }) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
-    }
-
-    function buildUrl(url, pairs) {
-      if (!pairs.length) return url;
-      return `${url}${url.includes('?') ? '&' : '?'}${encodePairs(pairs)}`;
-    }
-
-    // 未填写协议时补全：HTTPS 页面里的 http 请求会被当作混合内容拦截，所以除本机地址外默认用 https
-    function withProtocol(address) {
-      if (/^https?:\/\//i.test(address)) return address;
-      const isLocal = /^(localhost|127\.|\[::1\])/i.test(address);
-      return `${location.protocol === 'https:' && !isLocal ? 'https' : 'http'}://${address}`;
-    }
-
-    function decodeBody(buffer, contentType) {
-      const charset = (/charset=["']?([\w-]+)/i.exec(contentType) || [])[1] || 'utf-8';
-      try {
-        return new TextDecoder(charset).decode(buffer);
-      } catch (e) {
-        return new TextDecoder('utf-8').decode(buffer);
-      }
-    }
-
-    // 整理响应：JSON 解析成对象用于树形展示，图片生成预览地址，其余按文本展示
-    // 跨域请求只能读到服务器通过 Access-Control-Expose-Headers 暴露的响应头
-    async function parseResponse(res, start) {
-      const contentType = res.headers.get('content-type') || '';
-      const buffer = await res.arrayBuffer();
-      const headers = [];
-      res.headers.forEach((value, key) => headers.push({ key, value }));
-      const result = {
-        status: res.status,
-        statusText: res.statusText,
-        time: Date.now() - start,
-        size: buffer.byteLength,
-        headers
-      };
-      if (/^image\//i.test(contentType)) {
-        return { ...result, type: 'image', url: URL.createObjectURL(new Blob([buffer], { type: contentType })) };
-      }
-      const text = decodeBody(buffer, contentType);
-      if (/^\s*[{[]/.test(text)) {
-        try {
-          const data = JSON.parse(text);
-          return { ...result, type: 'json', text: JSON.stringify(data, null, 2), data: Object.freeze(data) };
-        } catch (e) {}
-      }
-      return { ...result, type: 'text', text };
-    }
-
-    // fetch 出错时浏览器出于安全考虑不给具体原因，只能列出常见情况
-    function describeError(error, url) {
-      if (location.protocol === 'https:' && /^http:/i.test(url) && !/^http:\/\/(localhost|127\.|\[::1\])/i.test(url)) {
-        return '当前页面是 HTTPS，浏览器会拦截 HTTP 请求（混合内容），请改用 https 地址';
-      }
-      if (error instanceof TypeError) {
-        return `无法完成请求：可能是目标接口不允许跨域（CORS）、地址无法访问或网络异常，可在浏览器开发者工具的控制台查看详情（${error.message}）`;
-      }
-      return error.message;
-    }
-
-    async function copyText(text) {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        return;
-      }
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    }
-
-    // ---------- 组件 ----------
-
-    // JSON 树形展示，对象和数组可折叠
-    // command: { open } 由外部更新，用于全部展开/折叠（根节点始终展开）
-    Vue.component('json-node', {
-      template: '#json-node-template',
-      props: {
-        value: null,
-        name: String,
-        last: { type: Boolean, default: true },
-        depth: { type: Number, default: 0 },
-        command: Object
-      },
-      data() {
-        return {
-          open: this.initialOpen()
-        };
-      },
-      computed: {
-        isArray() {
-          return Array.isArray(this.value);
-        },
-        // 空对象/空数组当作普通值直接显示 {} []
-        isContainer() {
-          return this.value !== null && typeof this.value === 'object' && Object.keys(this.value).length > 0;
-        },
-        keys() {
-          return Object.keys(this.value);
-        },
-        brackets() {
-          return this.isArray ? ['[', ']'] : ['{', '}'];
-        },
-        type() {
-          return this.value === null ? 'null' : typeof this.value;
-        },
-        text() {
-          return JSON.stringify(this.value);
-        },
-        indentStyle() {
-          // 叶子节点没有折叠图标，多缩进一个图标宽度以便与兄弟节点的键名对齐
-          return { paddingLeft: `${this.depth * 20 + (this.isContainer ? 0 : 16)}px` };
-        },
-        closeIndentStyle() {
-          return { paddingLeft: `${this.depth * 20 + 16}px` };
-        }
-      },
-      watch: {
-        command() {
-          this.open = this.initialOpen();
-        }
-      },
-      methods: {
-        initialOpen() {
-          return !this.command || this.command.open || this.depth === 0;
-        }
-      }
-    });
-
-    // 键值对表格：rows 由父组件持有，这里直接增删改；末尾始终保留一行空行，输入后自动追加新行
-    Vue.component('key-value-editor', {
-      template: '#key-value-editor-template',
-      props: {
-        rows: { type: Array, required: true },
-        keyLabel: { type: String, default: '键' },
-        // 键名的输入提示，例如常用请求头
-        suggestions: Array
-      },
-      methods: {
-        touch(index) {
-          if (index === this.rows.length - 1) this.rows.push(createRow());
-        },
-        querySuggestions(text, callback) {
-          const keyword = (text || '').toLowerCase();
-          callback(this.suggestions.filter(item => item.toLowerCase().includes(keyword)).map(value => ({ value })));
-        }
-      }
-    });
-
-    // ---------- 页面 ----------
-
-    const storageKey = 'api-request';
-    const timeout = 30 * 1000;
-    const bodyContentTypes = {
-      json: 'application/json',
-      form: 'application/x-www-form-urlencoded',
-      text: 'text/plain'
-    };
-
-    new Vue({
-      el: '#app',
-      template: '#api-tool-template',
-      data() {
-        return {
-          methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-          method: 'GET',
-          url: '',
-          params: restoreRows(),
-          headers: restoreRows(),
-          bodyTypes: { none: '无', json: 'JSON', form: '表单', text: '文本' },
-          bodyType: 'none',
-          body: '',
-          form: restoreRows(),
-          // Cookie、Origin、Referer 等是浏览器禁止脚本设置的请求头，这里不再提示
-          headerSuggestions: [
-            'Content-Type', 'Authorization', 'Accept', 'Accept-Language',
-            'Cache-Control', 'X-Requested-With', 'Token'
-          ],
-          requestTab: 'params',
-          loading: false,
-          response: null,
-          // 每次收到响应递增，用于重建树形视图
-          responseId: 0,
-          error: '',
-          responseTab: 'body',
-          view: 'tree',
-          command: null
-        };
-      },
-      computed: {
-        statusClass() {
-          return `is-${String(this.response.status)[0]}xx`;
-        },
-        showBodyActions() {
-          return this.response && this.responseTab === 'body' && this.response.type !== 'image';
-        }
-      },
-      created() {
-        // 恢复上次发送的请求
-        try {
-          const saved = JSON.parse(localStorage.getItem(storageKey));
-          if (saved) {
-            this.method = saved.method || 'GET';
-            this.url = saved.url || '';
-            this.params = restoreRows(saved.params);
-            this.headers = restoreRows(saved.headers);
-            this.bodyType = saved.bodyType || 'none';
-            this.body = saved.body || '';
-            this.form = restoreRows(saved.form);
-          }
-        } catch (e) {}
-        // 通过 ?url= 带着地址打开页面时，填入地址并把参数拆到参数表格
-        const url = new URLSearchParams(location.search).get('url');
-        if (url) {
-          this.method = 'GET';
-          this.url = url;
-          this.params = restoreRows();
-          this.splitQuery();
-          this.requestTab = 'params';
-          history.replaceState(null, '', location.pathname);
-        }
-      },
-      beforeDestroy() {
-        this.revokeImage();
-      },
-      methods: {
-        formatSize,
-        countOf(rows) {
-          return enabledPairs(rows).length;
-        },
-        // 地址中带的查询参数拆到参数表格里，便于编辑
-        splitQuery() {
-          const index = this.url.indexOf('?');
-          if (index === -1) return;
-          const query = this.url.slice(index + 1).split('#')[0];
-          this.url = this.url.slice(0, index);
-          parseQuery(query).forEach(({ key, value }) => {
-            this.params.splice(this.params.length - 1, 0, createRow(key, value));
-          });
-        },
-        formatBody() {
-          const { data, error } = parseJson(this.body);
-          if (error) {
-            this.$message.error(`JSON 格式错误：${error}`);
-            return;
-          }
-          this.body = JSON.stringify(data, null, 2);
-        },
-        saveRequest() {
-          const plain = rows => rows.map(({ enabled, key, value }) => ({ enabled, key, value }));
-          localStorage.setItem(storageKey, JSON.stringify({
-            method: this.method,
-            url: this.url,
-            params: plain(this.params),
-            headers: plain(this.headers),
-            bodyType: this.bodyType,
-            body: this.body,
-            form: plain(this.form)
-          }));
-        },
-        // 组装请求：未填写协议时自动补全，按请求体类型补上 Content-Type
-        buildConfig() {
-          const address = this.url.trim();
-          if (!address) {
-            this.$message.warning('请输入请求地址');
-            return null;
-          }
-          const headers = {};
-          enabledPairs(this.headers).forEach(({ key, value }) => {
-            headers[key.trim()] = value;
-          });
-          let data;
-          // 浏览器不允许 GET 请求携带请求体
-          if (this.method !== 'GET') {
-            if (this.bodyType === 'json' && this.body.trim()) {
-              const { error } = parseJson(this.body);
-              if (error) {
-                this.requestTab = 'body';
-                this.$message.error(`请求体不是合法的 JSON：${error}`);
-                return null;
-              }
-              data = this.body;
-            } else if (this.bodyType === 'form') {
-              data = encodePairs(enabledPairs(this.form));
-            } else if (this.bodyType === 'text') {
-              data = this.body;
-            }
-          }
-          const hasContentType = Object.keys(headers).some(key => key.toLowerCase() === 'content-type');
-          if (data !== undefined && !hasContentType) headers['Content-Type'] = bodyContentTypes[this.bodyType];
-          return {
-            method: this.method,
-            url: buildUrl(withProtocol(address), enabledPairs(this.params)),
-            headers,
-            data
-          };
-        },
-        async send() {
-          if (this.loading) return;
-          this.splitQuery();
-          let config;
-          try {
-            config = this.buildConfig();
-          } catch (e) {
-            this.$message.error(e.message);
-            return;
-          }
-          if (!config) return;
-          this.saveRequest();
-          this.loading = true;
-          this.error = '';
-          const controller = new AbortController();
-          this.controller = controller;
-          let timedOut = false;
-          const timer = setTimeout(() => {
-            timedOut = true;
-            controller.abort();
-          }, timeout);
-          const start = Date.now();
-          try {
-            const res = await fetch(config.url, {
-              method: config.method,
-              headers: config.headers,
-              body: config.data,
-              signal: controller.signal
-            });
-            const response = await parseResponse(res, start);
-            this.revokeImage();
-            this.response = response;
-            this.responseId++;
-            this.command = null;
-            this.view = 'tree';
-          } catch (e) {
-            this.revokeImage();
-            this.response = null;
-            if (e.name === 'AbortError') this.error = timedOut ? `请求超时（超过 ${timeout / 1000} 秒未响应）` : '请求已取消';
-            else this.error = describeError(e, config.url);
-          } finally {
-            clearTimeout(timer);
-            this.loading = false;
-          }
-        },
-        cancel() {
-          if (this.controller) this.controller.abort();
-        },
-        revokeImage() {
-          if (this.response && this.response.url) URL.revokeObjectURL(this.response.url);
-        },
-        async copy(text) {
-          try {
-            await copyText(text);
-            this.$message.success('已复制');
-          } catch (e) {
-            this.$message.error('复制失败');
-          }
-        }
-      }
+    document.querySelectorAll('.js-copy').forEach(function(btn){
+      btn.addEventListener('click', copyPhone);
     });
   </script>
 </body>
