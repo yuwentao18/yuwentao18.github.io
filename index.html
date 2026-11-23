@@ -1,802 +1,724 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>婺源汽车钣金喷漆 | 客车 小汽车 钣金喷漆修复 - 婺源汽车站附近</title>
-  <meta name="description" content="婺源县汽车站附近汽修店，专业钣金、喷漆，主修客车，小汽车也修。电话 13517033606。">
-  <meta name="keywords" content="婺源汽修,婺源钣金,婺源喷漆,客车钣金,客车喷漆,上饶汽修,婺源汽车站">
-  <meta name="theme-color" content="#14213d">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>照片对比查看</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.9.1/dist/index.css">
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.9.1/theme-chalk/dark/css-vars.css">
+  <script src="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus@2.9.1/dist/index.full.min.js"></script>
+  <script src="https://unpkg.com/element-plus@2.9.1/dist/locale/zh-cn.min.js"></script>
+  <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
   <style>
-    :root{
-      --navy: #14213d;
-      --navy-2: #1f3060;
-      --orange: #f77f00;
-      --orange-dark: #d96f00;
-      --bg: #f5f6f8;
-      --text: #222;
-      --muted: #666;
-      --radius: 12px;
+    :root {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --panel-2: #1e222b;
+      --line: #2a2f3a;
+      --text: #e6e8ee;
+      --sub: #8b93a5;
+      --accent: #409eff;
+      --ok: #67c23a;
+      --danger: #f56c6c;
     }
-    *{ box-sizing: border-box; }
-    html{ scroll-behavior: smooth; }
-    body{
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      /* 给手机底部固定栏留位置 */
-      padding-bottom: 76px;
-    }
-    a{ color: inherit; text-decoration: none; }
-    .container{
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    .icon{
-      width: 1.2em;
-      height: 1.2em;
-      flex-shrink: 0;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    #app { height: 100%; }
+    [v-cloak] { display: none; }
+    .layout { height: 100%; display: flex; flex-direction: column; }
+    .spacer { flex: 1; }
 
-    /* 按钮 */
-    .btn{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 22px;
-      border: none;
-      border-radius: 999px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .2s, transform .1s;
-      font-family: inherit;
+    /* ---------- 顶栏 ---------- */
+    .header {
+      height: 56px; flex: none; display: flex; align-items: center; gap: 16px; padding: 0 20px;
+      background: var(--panel); border-bottom: 1px solid var(--line);
     }
-    .btn:active{ transform: scale(.97); }
-    .btn-primary{ background: var(--orange); color: #fff; }
-    .btn-primary:hover{ background: var(--orange-dark); }
-    .btn-ghost{ background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.35); }
-    .btn-ghost:hover{ background: rgba(255,255,255,.2); }
-    .btn-light{ background: #fff; color: var(--navy); border: 1px solid #dde1e8; }
-    .btn-light:hover{ background: #f0f2f6; }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; letter-spacing: .5px; }
+    .brand .logo {
+      width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center;
+      background: linear-gradient(135deg, #409eff, #a855f7); font-size: 15px;
+    }
+    .folder { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 999px;
+      background: var(--panel-2); font-size: 13px; color: var(--sub); max-width: 320px; }
+    .folder b { color: var(--text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    /* 顶部导航 */
-    .header{
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: var(--navy);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,.15);
-    }
-    .header .container{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 60px;
-    }
-    .logo{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-    .logo-mark{
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      background: var(--orange);
-    }
-    .nav{
-      display: flex;
-      gap: 28px;
-      font-size: 15px;
-    }
-    .nav a{ opacity: .85; }
-    .nav a:hover{ opacity: 1; color: var(--orange); }
-    .header-call{
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 700;
-      color: var(--orange);
-      font-size: 17px;
-    }
+    .main { flex: 1; display: flex; min-height: 0; }
 
-    /* 首屏 */
-    .hero{
-      position: relative;
-      overflow: hidden;
-      color: #fff;
-      background:
-        radial-gradient(circle at 85% 20%, rgba(247,127,0,.35), transparent 45%),
-        linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
-      padding: 72px 0 80px;
+    /* ---------- 侧栏 ---------- */
+    .sidebar { width: 300px; flex: none; display: flex; flex-direction: column;
+      background: var(--panel); border-right: 1px solid var(--line); }
+    .side-head { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .tabs { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: var(--panel-2); }
+    .tab {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 7px 0; border-radius: 8px; font-size: 13px; color: var(--sub); cursor: pointer;
+      transition: background .15s, color .15s;
     }
-    .hero::after{
-      /* 斜纹装饰，模拟喷漆房的质感 */
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(-45deg, rgba(255,255,255,.03) 0 12px, transparent 12px 24px);
-      pointer-events: none;
-    }
-    .hero .container{ position: relative; z-index: 1; }
-    .hero-tag{
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 999px;
-      background: rgba(247,127,0,.18);
-      color: #ffb766;
-      font-size: 14px;
-      margin-bottom: 18px;
-    }
-    .hero h1{
-      margin: 0 0 14px;
-      font-size: 44px;
-      line-height: 1.25;
-      letter-spacing: 2px;
-    }
-    .hero h1 em{
-      font-style: normal;
-      color: var(--orange);
-    }
-    .hero-sub{
-      margin: 0 0 28px;
-      font-size: 18px;
-      opacity: .9;
-    }
-    .hero-points{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 22px;
-      margin: 0 0 32px;
-      padding: 0;
-      list-style: none;
-      font-size: 15px;
-      opacity: .9;
-    }
-    .hero-points li{
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .hero-points .icon{ color: var(--orange); }
-    .hero-actions{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .hero-phone{
-      margin-top: 24px;
-      font-size: 15px;
-      opacity: .85;
-    }
-    .hero-phone strong{
-      font-size: 22px;
-      letter-spacing: 1px;
-      color: #fff;
-    }
+    .tab:hover { color: var(--text); }
+    .tab.on { background: #2b3242; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+    .tab .dot { width: 7px; height: 7px; border-radius: 50%; }
+    .tab .count { font-size: 12px; opacity: .7; }
+    .dot.none { background: #7a8294; }
+    .dot.picked { background: var(--ok); }
+    .dot.trash { background: var(--danger); }
+    .side-meta { font-size: 12px; color: var(--sub); }
 
-    /* 通用区块 */
-    .section{ padding: 64px 0; }
-    .section-white{ background: #fff; }
-    .section-title{
-      text-align: center;
-      margin: 0 0 8px;
-      font-size: 30px;
-      color: var(--navy);
+    .thumbs {
+      flex: 1; overflow-y: auto; padding: 0 14px 14px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-content: start;
     }
-    .section-desc{
-      text-align: center;
-      margin: 0 0 40px;
-      color: var(--muted);
+    .thumbs::-webkit-scrollbar { width: 8px; }
+    .thumbs::-webkit-scrollbar-thumb { background: #333a46; border-radius: 4px; }
+    .thumb {
+      position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer;
+      background: var(--panel-2); outline: 2px solid transparent; outline-offset: -2px;
+      transition: transform .15s, outline-color .15s;
     }
+    .thumb:hover { transform: translateY(-2px); }
+    .thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: #0a0b0e; }
+    .thumb.viewing { outline-color: var(--accent); }
+    .thumb.viewing img { opacity: .75; }
+    .thumb-loading { position: absolute; inset: 0;
+      background: linear-gradient(100deg, #1e222b 30%, #272c37 50%, #1e222b 70%);
+      background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .badge {
+      position: absolute; top: 6px; right: 6px; min-width: 22px; height: 22px; padding: 0 6px;
+      border-radius: 11px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 600;
+      display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.4);
+    }
+    .thumb-name {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 6px 4px; font-size: 11px;
+      background: linear-gradient(transparent, rgba(0,0,0,.75)); color: #ddd;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transition: opacity .15s;
+    }
+    .thumb:hover .thumb-name { opacity: 1; }
+    /* 已选图片名称一直显示 */
+    .thumb.picked .thumb-name { opacity: 1; padding-top: 4px; background: rgba(103,194,58,.85); color: #fff; }
+    .side-empty { grid-column: 1 / -1; padding: 60px 0; text-align: center; color: var(--sub); font-size: 13px; }
 
-    /* 服务项目 */
-    .services{
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
+    /* ---------- 图标按钮 ---------- */
+    .ic {
+      flex: none; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 6px; display: grid; place-items: center;
+      background: transparent; color: #bbb; cursor: pointer; transition: background .15s, color .15s;
     }
-    .service-card{
-      position: relative;
-      padding: 28px 22px;
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 16px rgba(20,33,61,.06);
-      transition: transform .2s, box-shadow .2s;
-    }
-    .service-card:hover{
-      transform: translateY(-4px);
-      box-shadow: 0 10px 24px rgba(20,33,61,.12);
-    }
-    .service-card.featured{ border-top: 4px solid var(--orange); }
-    .service-badge{
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      padding: 2px 10px;
-      border-radius: 999px;
-      background: var(--orange);
-      color: #fff;
-      font-size: 12px;
-    }
-    .service-icon{
-      display: grid;
-      place-items: center;
-      width: 52px;
-      height: 52px;
-      margin-bottom: 16px;
-      border-radius: 12px;
-      background: #fff3e6;
-      color: var(--orange);
-      font-size: 26px;
-    }
-    .service-card h3{
-      margin: 0 0 8px;
-      font-size: 19px;
-      color: var(--navy);
-    }
-    .service-card p{
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .service-card ul{
-      margin: 0;
-      padding-left: 18px;
-      color: #444;
-      font-size: 14px;
-    }
+    .ic:hover { background: rgba(64,158,255,.9); color: #fff; }
+    .ic.ok:hover, .ic.ok.on { background: rgba(103,194,58,.9); color: #fff; }
+    .ic.danger:hover { background: rgba(245,108,108,.9); color: #fff; }
+    .ic svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round; }
 
-    /* 为什么选我们 */
-    .reasons{
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
+    /* ---------- 查看区：单行排列，放不下时左右滚动；操作栏在图片下方，不遮挡图片 ---------- */
+    .viewer { flex: 1; min-width: 0; position: relative; overflow: hidden; display: flex; }
+    .cards { flex: 1; min-width: 0; display: flex; gap: 10px; padding: 12px; overflow-x: auto; overflow-y: hidden; }
+    .cards::-webkit-scrollbar { height: 10px; }
+    .cards::-webkit-scrollbar-thumb { background: #333a46; border-radius: 5px; }
+    .cards::-webkit-scrollbar-thumb:hover { background: #445066; }
+    /* 张数少时居中，张数多时可以完整滚动到两端 */
+    .card:first-child { margin-left: auto; }
+    .card:last-child { margin-right: auto; }
+    .card {
+      flex: none;
+      display: flex; flex-direction: column; overflow: hidden; border-radius: 10px; background: var(--panel);
+      box-shadow: 0 0 0 1px var(--line); transition: width .25s ease, height .25s ease, box-shadow .15s;
+      animation: pop .25s ease;
     }
-    .reason{
-      text-align: center;
-      padding: 24px 16px;
+    @keyframes pop { from { opacity: 0; transform: scale(.96); } }
+    .card.active { box-shadow: 0 0 0 2px var(--accent); }
+    .card.picked { box-shadow: 0 0 0 2px var(--ok); }
+    .card.picked.active { box-shadow: 0 0 0 2px var(--ok), 0 0 0 4px var(--accent); }
+    .card-bar {
+      flex: none; height: 38px; display: flex; align-items: center; gap: 4px; padding: 0 6px 0 8px;
+      font-size: 12px; color: var(--sub); background: var(--panel-2);
     }
-    .reason-icon{
-      display: grid;
-      place-items: center;
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 14px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: #fff;
-      font-size: 28px;
+    .card-bar .name { flex: 1; min-width: 0; margin: 0 4px; overflow: hidden; white-space: nowrap;
+      text-overflow: ellipsis; color: var(--text); }
+    .card-bar .zoom { flex: none; min-width: 38px; text-align: right; margin-right: 2px; }
+    .card.picked .card-bar { background: rgba(103,194,58,.18); }
+    .idx { flex: none; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; display: grid; place-items: center;
+      background: var(--accent); color: #fff; font-weight: 600; }
+    .tag { flex: none; padding: 1px 6px; border-radius: 4px; font-size: 11px; color: #fff; }
+    .tag.picked { background: var(--ok); }
+    .tag.trash { background: var(--danger); }
+    .card-body {
+      flex: 1; min-height: 0; position: relative; overflow: hidden; background: #0a0b0e;
+      cursor: grab; user-select: none; touch-action: none;
     }
-    .reason h3{
-      margin: 0 0 6px;
-      font-size: 18px;
-      color: var(--navy);
+    .card-body.dragging { cursor: grabbing; }
+    .card-body img {
+      position: absolute; left: 50%; top: 50%; max-width: 100%; max-height: 100%;
+      pointer-events: none; will-change: transform;
     }
-    .reason p{
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* 维修流程 */
-    .steps{
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      counter-reset: step;
-    }
-    .step{
-      position: relative;
-      padding: 26px 20px 22px;
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 16px rgba(20,33,61,.06);
-    }
-    .step::before{
-      counter-increment: step;
-      content: counter(step);
-      display: grid;
-      place-items: center;
-      width: 36px;
-      height: 36px;
-      margin-bottom: 12px;
-      border-radius: 50%;
-      background: var(--orange);
-      color: #fff;
-      font-weight: 700;
-    }
-    .step h3{
-      margin: 0 0 6px;
-      font-size: 17px;
-      color: var(--navy);
-    }
-    .step p{
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* 联系我们 */
-    .contact{
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 24px;
-    }
-    .contact-card{
-      padding: 32px 28px;
-      border-radius: var(--radius);
-      background: var(--navy);
-      color: #fff;
-    }
-    .contact-card h3{
-      margin: 0 0 22px;
-      font-size: 22px;
-    }
-    .contact-item{
-      display: flex;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .contact-item .icon{
-      width: 24px;
-      height: 24px;
-      margin-top: 2px;
-      color: var(--orange);
-    }
-    .contact-item .label{
-      font-size: 13px;
-      opacity: .7;
-    }
-    .contact-item .value{
-      font-size: 17px;
-      font-weight: 600;
-    }
-    .contact-item .value.phone{
-      font-size: 26px;
-      letter-spacing: 1px;
-      color: var(--orange);
-    }
-    .contact-actions{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .map-card{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 32px 28px;
-      border-radius: var(--radius);
-      background: #fff;
-      box-shadow: 0 4px 16px rgba(20,33,61,.06);
-    }
-    .map-card h3{
-      margin: 0 0 6px;
-      font-size: 20px;
-      color: var(--navy);
-    }
-    .map-card p{
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .map-links{
-      display: grid;
-      gap: 12px;
-    }
-    .map-links .btn{ width: 100%; border-radius: 10px; }
-
-    /* 页脚 */
-    .footer{
-      padding: 28px 0;
-      background: #0e1830;
-      color: rgba(255,255,255,.6);
-      text-align: center;
-      font-size: 13px;
-    }
-    .footer p{ margin: 4px 0; }
-
-    /* 手机底部固定联系栏 */
-    .bottom-bar{
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 60;
-      display: none;
-      grid-template-columns: 1fr 1fr 1.4fr;
-      background: #fff;
-      box-shadow: 0 -2px 12px rgba(0,0,0,.1);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    .bottom-bar a,
-    .bottom-bar button{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      height: 60px;
-      border: none;
-      background: none;
-      color: var(--navy);
-      font-size: 13px;
-      font-family: inherit;
-      cursor: pointer;
-    }
-    .bottom-bar .bar-call{
-      flex-direction: row;
-      gap: 8px;
-      background: var(--orange);
-      color: #fff;
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    /* 提示 */
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 110px;
-      z-index: 100;
-      padding: 10px 20px;
-      border-radius: 8px;
-      background: rgba(0,0,0,.8);
-      color: #fff;
-      font-size: 14px;
-      opacity: 0;
-      transform: translate(-50%, 10px);
-      transition: opacity .25s, transform .25s;
-      pointer-events: none;
-    }
-    .toast.show{
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    /* 平板 */
-    @media (max-width: 900px){
-      .services, .reasons, .steps{ grid-template-columns: repeat(2, 1fr); }
-      .contact{ grid-template-columns: 1fr; }
-      .nav{ display: none; }
-    }
-    /* 手机 */
-    @media (max-width: 600px){
-      .header .container{ height: 54px; }
-      .logo{ font-size: 16px; }
-      .header-call span{ display: none; }
-      .hero{ padding: 48px 0 56px; }
-      .hero h1{ font-size: 30px; }
-      .hero-sub{ font-size: 16px; }
-      .hero-actions .btn{ flex: 1; }
-      .section{ padding: 48px 0; }
-      .section-title{ font-size: 24px; }
-      .section-desc{ margin-bottom: 28px; }
-      .services, .steps{ grid-template-columns: 1fr; }
-      .reasons{ grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .reason{ padding: 16px 8px; }
-      .contact-card, .map-card{ padding: 26px 20px; }
-      .bottom-bar{ display: grid; }
-    }
-    @media (min-width: 601px){
-      body{ padding-bottom: 0; }
-    }
+    .viewer-empty { position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px; color: var(--sub); }
+    .viewer-empty .big { font-size: 56px; opacity: .4; }
+    .viewer-empty .tips { font-size: 12px; opacity: .8; }
   </style>
 </head>
 <body>
+<div id="app" v-cloak>
+  <el-config-provider :locale="zhCn">
+    <div class="layout">
+      <header class="header">
+        <div class="brand"><span class="logo">◧</span>照片对比查看</div>
+        <el-button type="primary" @click="pickFolder">选择文件夹</el-button>
+        <input ref="folderInput" type="file" webkitdirectory multiple hidden @change="onFolderChange">
+        <div class="folder" v-if="folderName">
+          <b :title="folderName">{{ folderName }}</b><span>{{ images.length }} 张</span>
+        </div>
+        <div class="spacer"></div>
+        <el-switch v-model="includeSub" active-text="包含子文件夹"></el-switch>
+        <el-switch v-model="linked" active-text="联动缩放"></el-switch>
+        <el-button text :disabled="!views.length" @click="resetAll">全部复位</el-button>
+        <el-button text :disabled="!views.length" @click="clearViews">清空查看区</el-button>
+        <el-dropdown trigger="click" @command="onExport" :disabled="!pickedList.length">
+          <el-button type="success" :disabled="!pickedList.length">导出已选 ({{ pickedList.length }}) ▾</el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="folder" :disabled="!canPickDir">复制图片到文件夹…</el-dropdown-item>
+              <el-dropdown-item command="zip">打包下载 ZIP</el-dropdown-item>
+              <el-dropdown-item command="txt" divided>导出文件清单 (.txt)</el-dropdown-item>
+              <el-dropdown-item command="copy">复制文件名</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </header>
 
-  <!-- SVG 图标 -->
-  <svg width="0" height="0" style="position:absolute">
-    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
-    <symbol id="i-map" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
-    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
-    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-    <symbol id="i-nav" viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></symbol>
-    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
-    <symbol id="i-spray" viewBox="0 0 24 24"><path d="M8 10h8v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10z"/><path d="M10 10V6h4v4"/><path d="M14 4h2"/><path d="M18 2v.01M20 4v.01M18 6v.01M21 2v.01M21 6v.01"/></symbol>
-    <symbol id="i-bus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="15" rx="2"/><path d="M3 11h18M8 3v8M16 3v8"/><circle cx="7.5" cy="20" r="1.5"/><circle cx="16.5" cy="20" r="1.5"/></symbol>
-    <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><path d="M3 12h18"/><circle cx="7.5" cy="17.5" r="2"/><circle cx="16.5" cy="17.5" r="2"/><path d="M9.5 17.5h5"/></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
-    <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2a10 10 0 0 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-4.9-4.5-8.6-10-8.6z"/></symbol>
-    <symbol id="i-yuan" viewBox="0 0 24 24"><path d="M6 3l6 8 6-8M12 11v10M7 13h10M7 17h10"/></symbol>
-    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-  </svg>
-
-  <!-- 顶部导航 -->
-  <header class="header">
-    <div class="container">
-      <a href="#top" class="logo">
-        <span class="logo-mark"><svg class="icon"><use href="#i-wrench"/></svg></span>
-        婺源汽车钣金喷漆
-      </a>
-      <nav class="nav">
-        <a href="#services">服务项目</a>
-        <a href="#reasons">为什么选我们</a>
-        <a href="#steps">维修流程</a>
-        <a href="#contact">联系我们</a>
-      </nav>
-      <a href="tel:13517033606" class="header-call">
-        <svg class="icon"><use href="#i-phone"/></svg>
-        <span>135 1703 3606</span>
-      </a>
-    </div>
-  </header>
-
-  <!-- 首屏 -->
-  <section class="hero" id="top">
-    <div class="container">
-      <span class="hero-tag">婺源县汽车站附近 · 本地老店</span>
-      <h1>专业<em>钣金 · 喷漆</em><br>客车主修，小汽车也修</h1>
-      <p class="hero-sub">剐蹭、凹陷、掉漆、事故修复，整车翻新喷漆，修好再提车。</p>
-      <ul class="hero-points">
-        <li><svg class="icon"><use href="#i-check"/></svg>客车大车经验足</li>
-        <li><svg class="icon"><use href="#i-check"/></svg>调色准 不色差</li>
-        <li><svg class="icon"><use href="#i-check"/></svg>先看车 后报价</li>
-      </ul>
-      <div class="hero-actions">
-        <a href="tel:13517033606" class="btn btn-primary">
-          <svg class="icon"><use href="#i-phone"/></svg>一键拨打电话
-        </a>
-        <a href="#contact" class="btn btn-ghost">
-          <svg class="icon"><use href="#i-map"/></svg>查看地址
-        </a>
-      </div>
-      <p class="hero-phone">联系电话：<strong>135 1703 3606</strong></p>
-    </div>
-  </section>
-
-  <!-- 服务项目 -->
-  <section class="section" id="services">
-    <div class="container">
-      <h2 class="section-title">服务项目</h2>
-      <p class="section-desc">钣金喷漆一站搞定，大车小车都能修</p>
-      <div class="services">
-        <div class="service-card featured">
-          <span class="service-badge">主营</span>
-          <div class="service-icon"><svg class="icon"><use href="#i-bus"/></svg></div>
-          <h3>客车钣金喷漆</h3>
-          <p>大巴、中巴、公交车、旅游客车</p>
-          <ul>
-            <li>车身凹陷、撞击修复</li>
-            <li>侧围、前后围钣金</li>
-            <li>整车喷漆翻新、改色</li>
-          </ul>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><svg class="icon"><use href="#i-car"/></svg></div>
-          <h3>小汽车钣金喷漆</h3>
-          <p>轿车、SUV、面包车、货车</p>
-          <ul>
-            <li>剐蹭、划痕修补</li>
-            <li>保险杠、车门修复</li>
-            <li>局部补漆、整车喷漆</li>
-          </ul>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><svg class="icon"><use href="#i-wrench"/></svg></div>
-          <h3>钣金修复</h3>
-          <p>恢复车身原有线条和结构</p>
-          <ul>
-            <li>凹陷整形、拉伸校正</li>
-            <li>事故车修复</li>
-            <li>锈蚀、破损部位焊补</li>
-          </ul>
-        </div>
-        <div class="service-card">
-          <div class="service-icon"><svg class="icon"><use href="#i-spray"/></svg></div>
-          <h3>喷漆烤漆</h3>
-          <p>电脑调色，颜色还原度高</p>
-          <ul>
-            <li>划痕、掉漆补漆</li>
-            <li>单面、多面喷漆</li>
-            <li>整车翻新、改色</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 为什么选我们 -->
-  <section class="section section-white" id="reasons">
-    <div class="container">
-      <h2 class="section-title">为什么选我们</h2>
-      <p class="section-desc">本地店面，老板亲自动手，修得放心</p>
-      <div class="reasons">
-        <div class="reason">
-          <div class="reason-icon"><svg class="icon"><use href="#i-bus"/></svg></div>
-          <h3>擅长大车</h3>
-          <p>长期修客车，大面积钣金喷漆有经验</p>
-        </div>
-        <div class="reason">
-          <div class="reason-icon"><svg class="icon"><use href="#i-palette"/></svg></div>
-          <h3>颜色还原</h3>
-          <p>精细调色，修补处与原车漆一致</p>
-        </div>
-        <div class="reason">
-          <div class="reason-icon"><svg class="icon"><use href="#i-yuan"/></svg></div>
-          <h3>价格透明</h3>
-          <p>先看车再报价，说好的价不乱加</p>
-        </div>
-        <div class="reason">
-          <div class="reason-icon"><svg class="icon"><use href="#i-user"/></svg></div>
-          <h3>老板亲修</h3>
-          <p>老板亲自上手，活儿干得仔细</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 维修流程 -->
-  <section class="section" id="steps">
-    <div class="container">
-      <h2 class="section-title">维修流程</h2>
-      <p class="section-desc">简单四步，省心修车</p>
-      <div class="steps">
-        <div class="step">
-          <h3>电话联系</h3>
-          <p>打电话说一下车型和损伤情况，先大概了解。</p>
-        </div>
-        <div class="step">
-          <h3>到店看车</h3>
-          <p>把车开到店里，现场查看损伤，给出报价。</p>
-        </div>
-        <div class="step">
-          <h3>钣金喷漆</h3>
-          <p>确认价格后开工，钣金整形、打磨、调色、喷漆。</p>
-        </div>
-        <div class="step">
-          <h3>验车提车</h3>
-          <p>修好后当面验车，满意再付款提车。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 联系我们 -->
-  <section class="section section-white" id="contact">
-    <div class="container">
-      <h2 class="section-title">联系我们</h2>
-      <p class="section-desc">修车前建议先打个电话，确认师傅在店</p>
-      <div class="contact">
-        <div class="contact-card">
-          <h3>婺源汽车钣金喷漆</h3>
-          <div class="contact-item">
-            <svg class="icon"><use href="#i-phone"/></svg>
-            <div>
-              <div class="label">联系电话</div>
-              <a href="tel:13517033606" class="value phone">135 1703 3606</a>
+      <div class="main">
+        <aside class="sidebar">
+          <div class="side-head">
+            <div class="tabs">
+              <div v-for="g in GROUPS" :key="g.key" class="tab" :class="{ on: tab === g.key }" @click="tab = g.key">
+                <span class="dot" :class="g.key"></span>{{ g.label }}<span class="count">{{ counts[g.key] }}</span>
+              </div>
+            </div>
+            <el-input v-model="keyword" placeholder="搜索文件名" clearable></el-input>
+            <div class="side-meta">{{ filtered.length }} 张 · 查看中 {{ views.length }} / {{ MAX_VIEW }}</div>
+          </div>
+          <div class="thumbs">
+            <div v-for="item in filtered" :key="item.id" v-thumb="item"
+                 class="thumb" :class="{ viewing: viewOrder.has(item.id), picked: item.status === 'picked' }"
+                 :title="item.path" @click="toggleView(item)">
+              <img v-if="item.thumb" :src="item.thumb" decoding="async">
+              <div v-else class="thumb-loading"></div>
+              <span v-if="viewOrder.has(item.id)" class="badge">{{ viewOrder.get(item.id) + 1 }}</span>
+              <div class="thumb-name">{{ item.name }}</div>
+            </div>
+            <div v-if="!filtered.length" class="side-empty">
+              <template v-if="!images.length">点击上方「选择文件夹」开始</template>
+              <template v-else-if="keyword">没有匹配的图片</template>
+              <template v-else>「{{ groupLabel(tab) }}」里还没有图片</template>
             </div>
           </div>
-          <div class="contact-item">
-            <svg class="icon"><use href="#i-map"/></svg>
-            <div>
-              <div class="label">店铺地址</div>
-              <div class="value">江西省上饶市婺源县汽车站附近</div>
-            </div>
-          </div>
-          <div class="contact-item">
-            <svg class="icon"><use href="#i-clock"/></svg>
-            <div>
-              <div class="label">营业时间</div>
-              <div class="value">每天 8:00 - 18:00（来前请电话确认）</div>
-            </div>
-          </div>
-          <div class="contact-actions">
-            <a href="tel:13517033606" class="btn btn-primary">
-              <svg class="icon"><use href="#i-phone"/></svg>拨打电话
-            </a>
-            <button type="button" class="btn btn-ghost js-copy">
-              <svg class="icon"><use href="#i-copy"/></svg>复制号码
-            </button>
-          </div>
-        </div>
+        </aside>
 
-        <div class="map-card">
-          <h3>导航到店</h3>
-          <p>在婺源县汽车站附近，到了找不到可直接打电话，我们出来接你。</p>
-          <div class="map-links">
-            <a class="btn btn-light" target="_blank" rel="noopener"
-               href="https://uri.amap.com/search?keyword=%E5%A9%BA%E6%BA%90%E5%8E%BF%E6%B1%BD%E8%BD%A6%E7%AB%99&city=%E4%B8%8A%E9%A5%B6&src=wuyuan-repair&callnative=1">
-              <svg class="icon"><use href="#i-nav"/></svg>用高德地图导航
-            </a>
-            <a class="btn btn-light" target="_blank" rel="noopener"
-               href="https://api.map.baidu.com/geocoder?address=%E6%B1%9F%E8%A5%BF%E7%9C%81%E4%B8%8A%E9%A5%B6%E5%B8%82%E5%A9%BA%E6%BA%90%E5%8E%BF%E6%B1%BD%E8%BD%A6%E7%AB%99&output=html&src=wuyuan-repair">
-              <svg class="icon"><use href="#i-nav"/></svg>用百度地图导航
-            </a>
+        <main class="viewer" ref="viewerEl">
+          <div v-if="!views.length" class="viewer-empty">
+            <div class="big">🖼</div>
+            <div>点击左侧图片加入查看，再次点击取消</div>
+            <div class="tips">滚轮缩放 · 拖动平移 · 双击复位 · ← → 切换当前图 · Delete 移出查看区</div>
+            <div class="tips">P 标为已选/取消 · X 移入回收站并切到下一张 · U 恢复到未选</div>
           </div>
-        </div>
+          <div v-else class="cards" ref="cardsEl" @wheel="onCardsWheel">
+            <div v-for="(v, i) in views" :key="v.key" class="card" :style="cardStyle"
+                 :class="{ active: i === activeIndex, picked: v.item.status === 'picked' }"
+                 @pointerdown="activeIndex = i">
+              <div class="card-body" :class="{ dragging: v.dragging }"
+                   @pointerdown="onPointerDown($event, i)"
+                   @pointermove="onPointerMove($event, i)"
+                   @pointerup="onPointerUp(i)"
+                   @pointercancel="onPointerUp(i)"
+                   @wheel.prevent="onWheel($event, i)"
+                   @dblclick="resetView(i)">
+                <img :src="v.url" :style="imgStyle(v)" draggable="false">
+              </div>
+              <div class="card-bar">
+                <span class="idx">{{ i + 1 }}</span>
+                <span v-if="v.item.status === 'picked'" class="tag picked">已选</span>
+                <span v-else-if="v.item.status === 'trash'" class="tag trash">回收站</span>
+                <span class="name" :title="v.item.path">{{ v.item.name }}</span>
+                <span class="zoom">{{ Math.round(v.scale * 100) }}%</span>
+                <button class="ic" title="缩小" @click="zoomBy(i, 1 / 1.25)"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+                <button class="ic" title="放大" @click="zoomBy(i, 1.25)"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                <button class="ic" title="旋转" @click="rotate(i)"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+                <button class="ic" title="复位" @click="resetView(i)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+                <button class="ic ok" :class="{ on: v.item.status === 'picked' }"
+                        :title="v.item.status === 'picked' ? '取消已选 (P)' : '标为已选 (P)'" @click="togglePick(i)">
+                  <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></button>
+                <button v-if="v.item.status !== 'trash'" class="ic danger" title="移入回收站 (X)" @click="trashView(i)">
+                  <svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+                <button v-else class="ic" title="恢复到未选 (U)" @click="markView(i, 'none')">
+                  <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+                <button class="ic" title="移出查看区 (Delete)" @click="removeView(i)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
-  </section>
+  </el-config-provider>
+</div>
 
-  <!-- 页脚 -->
-  <footer class="footer">
-    <div class="container">
-      <p>婺源汽车钣金喷漆 · 客车钣金喷漆 · 小汽车钣金喷漆</p>
-      <p>地址：江西省上饶市婺源县汽车站附近 &nbsp;|&nbsp; 电话：135 1703 3606</p>
-    </div>
-  </footer>
+<script>
+const { createApp, ref, shallowRef, reactive, computed, nextTick, onMounted, onBeforeUnmount, markRaw } = Vue;
 
-  <!-- 手机底部固定联系栏 -->
-  <div class="bottom-bar">
-    <a href="#contact">
-      <svg class="icon"><use href="#i-map"/></svg>地址
-    </a>
-    <button type="button" class="js-copy">
-      <svg class="icon"><use href="#i-copy"/></svg>复制号码
-    </button>
-    <a href="tel:13517033606" class="bar-call">
-      <svg class="icon"><use href="#i-phone"/></svg>打电话
-    </a>
-  </div>
+const IMAGE_EXT = /\.(jpe?g|png|gif|webp|bmp|svg|avif|ico)$/i;
+const MAX_VIEW = 12;          // 同时查看的最大张数，太多会占用大量内存
+const THUMB_WIDTH = 240;      // 缩略图宽度
+const THUMB_CONCURRENCY = 4;  // 同时生成缩略图的数量
+const GAP = 10;               // 卡片间距，需与 .cards 的 gap 一致
+const PAD = 12;               // 查看区内边距，需与 .cards 的 padding 一致
+const BAR_H = 38;             // 卡片底部操作栏高度，需与 .card-bar 一致
+const SCROLLBAR_H = 10;       // 横向滚动条高度
+const MIN_CARD_W = 320;       // 卡片最小宽度，放不下时左右滚动
+const MIN_SCALE = 0.1;
+const MAX_SCALE = 20;
+const STORE_PREFIX = 'photoschange:';
+const GROUPS = [
+  { key: 'none', label: '未选' },
+  { key: 'picked', label: '已选' },
+  { key: 'trash', label: '回收站' },
+];
 
-  <div class="toast" id="toast"></div>
+// ---------- 缩略图：只为可见的图片生成小图，避免一次解码整个文件夹的原图导致卡死 ----------
+let generation = 0;
+const queue = [];
+let running = 0;
 
-  <script>
-    var PHONE = '13517033606';
-    var toastTimer = null;
-
-    function showToast(text){
-      var toast = document.getElementById('toast');
-      toast.textContent = text;
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(function(){
-        toast.classList.remove('show');
-      }, 2000);
+async function makeThumb(file) {
+  if (/svg/i.test(file.type) || /\.svg$/i.test(file.name)) return URL.createObjectURL(file);
+  try {
+    let bmp;
+    try {
+      bmp = await createImageBitmap(file, { resizeWidth: THUMB_WIDTH, resizeQuality: 'medium' });
+    } catch {
+      bmp = await createImageBitmap(file);
     }
+    const s = Math.min(1, THUMB_WIDTH / bmp.width);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bmp.width * s);
+    canvas.height = Math.round(bmp.height * s);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    bmp.close();
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/webp', 0.8));
+    if (!blob) throw new Error('toBlob failed');
+    return URL.createObjectURL(blob);
+  } catch {
+    return URL.createObjectURL(file); // 浏览器无法解码时退回原图
+  }
+}
 
-    // 微信内置浏览器等环境可能不支持 clipboard API，降级用 execCommand
-    function copyPhone(){
-      if(navigator.clipboard && window.isSecureContext){
-        navigator.clipboard.writeText(PHONE).then(function(){
-          showToast('号码已复制：' + PHONE);
-        }, fallbackCopy);
-      }else{
-        fallbackCopy();
-      }
+function requestThumb(item) {
+  if (item.thumb || item.queued) return;
+  item.queued = true;
+  queue.push(item);
+  pump();
+}
+
+function pump() {
+  while (running < THUMB_CONCURRENCY && queue.length) {
+    const item = queue.pop(); // 后进先出：优先处理刚滚动到的
+    item.queued = false;
+    if (item.gen !== generation || !item.visible || item.thumb) continue;
+    running++;
+    makeThumb(item.file)
+      .then(url => {
+        if (item.gen === generation) item.thumb = url;
+        else URL.revokeObjectURL(url);
+      })
+      .finally(() => { running--; pump(); });
+  }
+}
+
+let observer = null;
+const vThumb = {
+  mounted(el, { value }) {
+    if (!observer) {
+      observer = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          const item = en.target.__item;
+          item.visible = en.isIntersecting;
+          if (en.isIntersecting) requestThumb(item);
+        });
+      }, { root: el.closest('.thumbs'), rootMargin: '300px 0px' });
     }
+    el.__item = value;
+    observer.observe(el);
+  },
+  updated(el, { value }) { el.__item = value; },
+  beforeUnmount(el) {
+    el.__item.visible = false;
+    observer.unobserve(el);
+  },
+};
 
-    function fallbackCopy(){
-      var input = document.createElement('textarea');
-      input.value = PHONE;
-      input.setAttribute('readonly', '');
-      input.style.position = 'fixed';
-      input.style.opacity = '0';
-      document.body.appendChild(input);
-      input.select();
-      try{
-        document.execCommand('copy');
-        showToast('号码已复制：' + PHONE);
-      }catch(e){
-        showToast('复制失败，请长按号码手动复制');
-      }
-      document.body.removeChild(input);
-    }
+// 导出时用的文件名：根目录下的图片保持原名，子文件夹里的同名图片加上子文件夹前缀避免覆盖
+function exportNames(items) {
+  const used = new Set();
+  return items.map(i => {
+    let name = i.name;
+    if (used.has(name.toLowerCase())) name = i.path.split('/').slice(1).join('_');
+    let n = 1;
+    const dot = name.lastIndexOf('.');
+    const base = dot > 0 ? name.slice(0, dot) : name;
+    const ext = dot > 0 ? name.slice(dot) : '';
+    while (used.has(name.toLowerCase())) name = `${base} (${n++})${ext}`;
+    used.add(name.toLowerCase());
+    return name;
+  });
+}
 
-    document.querySelectorAll('.js-copy').forEach(function(btn){
-      btn.addEventListener('click', copyPhone);
+function download(blob, filename) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+const collator = new Intl.Collator('zh-CN', { numeric: true });
+let viewSeq = 0;
+
+createApp({
+  setup() {
+    const folderInput = ref(null);
+    const viewerEl = ref(null);
+    const cardsEl = ref(null);
+    const allItems = shallowRef([]);
+    const folderName = ref('');
+    const includeSub = ref(true);
+    const keyword = ref('');
+    const tab = ref('none');
+    const linked = ref(false);
+    const views = ref([]);
+    const activeIndex = ref(0);
+    const viewerSize = reactive({ w: 0, h: 0 });
+    const canPickDir = 'showDirectoryPicker' in window;
+
+    const images = computed(() =>
+      includeSub.value ? allItems.value : allItems.value.filter(i => i.depth === 0));
+
+    const counts = computed(() => {
+      const c = { none: 0, picked: 0, trash: 0 };
+      images.value.forEach(i => c[i.status]++);
+      return c;
     });
-  </script>
+
+    const pickedList = computed(() => images.value.filter(i => i.status === 'picked'));
+
+    const filtered = computed(() => {
+      const k = keyword.value.trim().toLowerCase();
+      return images.value.filter(i => i.status === tab.value && (!k || i.name.toLowerCase().includes(k)));
+    });
+
+    // 图片 id -> 在查看区中的序号
+    const viewOrder = computed(() => new Map(views.value.map((v, i) => [v.item.id, i])));
+
+    const groupLabel = key => GROUPS.find(g => g.key === key).label;
+
+    // 所有图片排成一行：张数少时平分宽度，张数多时每张保持一个最小宽度（至少能完整显示一张竖图），左右滚动查看
+    const cardStyle = computed(() => {
+      const n = views.value.length;
+      const W = viewerSize.w - PAD * 2;
+      const H = viewerSize.h - PAD * 2;
+      if (!n || W <= 0 || H <= 0) return {};
+      const fit = (W - GAP * (n - 1)) / n;
+      const min = Math.min(W, Math.max(MIN_CARD_W, (H - BAR_H - SCROLLBAR_H) * 3 / 4));
+      return { width: Math.floor(Math.max(fit, min)) + 'px' };
+    });
+
+    const imgStyle = v => ({
+      transform: `translate(-50%, -50%) translate(${v.x}px, ${v.y}px) scale(${v.scale}) rotate(${v.rotate}deg)`,
+    });
+
+    // ---------- 选择文件夹 ----------
+    function pickFolder() {
+      folderInput.value.value = '';
+      folderInput.value.click();
+    }
+
+    function onFolderChange(e) {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+
+      generation++;
+      queue.length = 0;
+      allItems.value.forEach(i => i.thumb && URL.revokeObjectURL(i.thumb));
+      clearViews();
+
+      folderName.value = files[0].webkitRelativePath.split('/')[0];
+      const saved = loadStatus(folderName.value);
+      allItems.value = files
+        .filter(f => f.type.startsWith('image/') || IMAGE_EXT.test(f.name))
+        .sort((a, b) => collator.compare(a.webkitRelativePath, b.webkitRelativePath))
+        .map((f, idx) => {
+          const path = f.webkitRelativePath || f.name;
+          return reactive({
+            id: idx,
+            name: f.name,
+            path,
+            depth: path.split('/').length - 2, // 0 表示在所选文件夹根目录
+            status: saved[path] || 'none',
+            file: markRaw(f),
+            gen: generation,
+            thumb: '',
+            queued: false,
+            visible: false,
+          });
+        });
+      tab.value = 'none';
+
+      if (!allItems.value.length) {
+        ElementPlus.ElMessage.warning('该文件夹下没有图片');
+      } else if (counts.value.picked || counts.value.trash) {
+        ElementPlus.ElMessage.success(`已恢复上次的分组：已选 ${counts.value.picked} 张，回收站 ${counts.value.trash} 张`);
+      }
+    }
+
+    // ---------- 分组（按文件夹名保存在 localStorage，下次打开同一文件夹自动恢复） ----------
+    function loadStatus(name) {
+      try {
+        return JSON.parse(localStorage.getItem(STORE_PREFIX + name) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    let saveTimer;
+    function saveStatus() {
+      const key = STORE_PREFIX + folderName.value;
+      const items = allItems.value;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        const map = {};
+        items.forEach(i => { if (i.status !== 'none') map[i.path] = i.status; });
+        try { localStorage.setItem(key, JSON.stringify(map)); } catch {}
+      }, 300);
+    }
+
+    function markView(i, status) {
+      views.value[i].item.status = status;
+      saveStatus();
+    }
+
+    function togglePick(i) {
+      markView(i, views.value[i].item.status === 'picked' ? 'none' : 'picked');
+    }
+
+    // 移入回收站后，在原位置换成当前分组里的下一张，方便连续筛选
+    function trashView(i) {
+      const item = views.value[i].item;
+      const list = filtered.value.filter(x => x.id === item.id || !viewOrder.value.has(x.id));
+      const pos = list.findIndex(x => x.id === item.id);
+      markView(i, 'trash');
+      const rest = list.filter(x => x.id !== item.id);
+      if (!rest.length) return removeView(i);
+      replaceView(i, rest[Math.max(0, pos) % rest.length]);
+    }
+
+    // ---------- 导出已选 ----------
+    async function onExport(cmd) {
+      const list = pickedList.value.slice();
+      const label = `${folderName.value}-已选`;
+      try {
+        if (cmd === 'txt') {
+          download(new Blob([list.map(i => i.path).join('\r\n')], { type: 'text/plain' }), `${label}.txt`);
+        } else if (cmd === 'copy') {
+          await navigator.clipboard.writeText(list.map(i => i.name).join('\n'));
+          ElementPlus.ElMessage.success(`已复制 ${list.length} 个文件名`);
+        } else if (cmd === 'folder') {
+          await exportToFolder(list);
+        } else if (cmd === 'zip') {
+          await exportZip(list, label);
+        }
+      } catch (err) {
+        if (err?.name === 'AbortError') return; // 用户取消了选择文件夹
+        console.error(err);
+        ElementPlus.ElMessage.error('导出失败：' + (err?.message || err));
+      }
+    }
+
+    async function exportToFolder(list) {
+      const dir = await window.showDirectoryPicker({ mode: 'readwrite' });
+      const names = exportNames(list);
+      const loading = ElementPlus.ElLoading.service({ text: '正在复制…', background: 'rgba(0,0,0,.6)' });
+      try {
+        for (let n = 0; n < list.length; n++) {
+          loading.setText(`正在复制 ${n + 1} / ${list.length}`);
+          const handle = await dir.getFileHandle(names[n], { create: true });
+          const writable = await handle.createWritable();
+          await writable.write(list[n].file);
+          await writable.close();
+        }
+      } finally {
+        loading.close();
+      }
+      ElementPlus.ElMessage.success(`已复制 ${list.length} 张图片到「${dir.name}」`);
+    }
+
+    async function exportZip(list, label) {
+      const zip = new JSZip();
+      exportNames(list).forEach((name, n) => zip.file(name, list[n].file));
+      const loading = ElementPlus.ElLoading.service({ text: '正在打包…', background: 'rgba(0,0,0,.6)' });
+      try {
+        // 照片本身已压缩，直接存储即可，速度快很多
+        const blob = await zip.generateAsync({ type: 'blob', compression: 'STORE' },
+          meta => loading.setText(`正在打包 ${Math.floor(meta.percent)}%`));
+        download(blob, `${label}.zip`);
+      } finally {
+        loading.close();
+      }
+    }
+
+    // ---------- 查看区 ----------
+    const newView = item => ({
+      key: ++viewSeq, item, url: URL.createObjectURL(item.file),
+      scale: 1, x: 0, y: 0, rotate: 0, dragging: false,
+    });
+
+    function toggleView(item) {
+      const i = viewOrder.value.get(item.id);
+      if (i !== undefined) return removeView(i);
+      if (views.value.length >= MAX_VIEW) {
+        ElementPlus.ElMessage.warning(`最多同时查看 ${MAX_VIEW} 张`);
+        return;
+      }
+      views.value.push(newView(item));
+      activeIndex.value = views.value.length - 1;
+      scrollToCard(activeIndex.value);
+    }
+
+    function removeView(i) {
+      const [v] = views.value.splice(i, 1);
+      URL.revokeObjectURL(v.url);
+      if (activeIndex.value >= views.value.length) activeIndex.value = Math.max(0, views.value.length - 1);
+    }
+
+    function replaceView(i, item) {
+      URL.revokeObjectURL(views.value[i].url);
+      views.value[i] = newView(item);
+    }
+
+    function clearViews() {
+      views.value.forEach(v => URL.revokeObjectURL(v.url));
+      views.value = [];
+      activeIndex.value = 0;
+    }
+
+    // ---------- 缩放 / 旋转 ----------
+    // 联动时作用于所有图片，否则只作用于当前图片
+    const targets = i => linked.value ? views.value : [views.value[i]];
+
+    const reset = v => Object.assign(v, { scale: 1, x: 0, y: 0, rotate: 0 });
+    const resetView = i => targets(i).forEach(reset);
+    const resetAll = () => views.value.forEach(reset);
+    const rotate = i => targets(i).forEach(v => { v.rotate = (v.rotate + 90) % 360; });
+
+    // 以 (mx, my)（相对图片区域中心）为中心缩放
+    function zoomAt(v, factor, mx = 0, my = 0) {
+      const ns = Math.min(MAX_SCALE, Math.max(MIN_SCALE, v.scale * factor));
+      const r = ns / v.scale;
+      v.x = mx - (mx - v.x) * r;
+      v.y = my - (my - v.y) * r;
+      v.scale = ns;
+    }
+
+    const zoomBy = (i, factor) => targets(i).forEach(v => zoomAt(v, factor));
+
+    // 在图片以外的地方（操作栏、空白处）滚动鼠标滚轮时左右滚动查看区
+    function onCardsWheel(e) {
+      if (e.target.closest('.card-body') || e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      cardsEl.value.scrollLeft += e.deltaY;
+    }
+
+    // 把第 i 张滚动到可见位置
+    function scrollToCard(i) {
+      nextTick(() => {
+        cardsEl.value?.children[i]?.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+      });
+    }
+
+    function onWheel(e, i) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const mx = e.clientX - rect.left - rect.width / 2;
+      const my = e.clientY - rect.top - rect.height / 2;
+      const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+      targets(i).forEach(v => zoomAt(v, factor, mx, my));
+    }
+
+    // ---------- 拖动 ----------
+    let drag = null;
+
+    function onPointerDown(e, i) {
+      if (e.button !== 0) return;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      views.value[i].dragging = true;
+      drag = { i, x: e.clientX, y: e.clientY };
+    }
+
+    function onPointerMove(e, i) {
+      if (!drag || drag.i !== i) return;
+      const dx = e.clientX - drag.x;
+      const dy = e.clientY - drag.y;
+      drag.x = e.clientX;
+      drag.y = e.clientY;
+      targets(i).forEach(v => { v.x += dx; v.y += dy; });
+    }
+
+    function onPointerUp(i) {
+      if (!drag || drag.i !== i) return;
+      if (views.value[i]) views.value[i].dragging = false;
+      drag = null;
+    }
+
+    // ---------- 键盘 ----------
+    function onKeydown(e) {
+      if (e.target.tagName === 'INPUT' || e.ctrlKey || e.metaKey || e.altKey || !views.value.length) return;
+      const i = activeIndex.value;
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (key === 'Delete') return removeView(i);
+      if (key === 'p') return togglePick(i);
+      if (key === 'x') return trashView(i);
+      if (key === 'u') return markView(i, 'none');
+      if (key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+      e.preventDefault();
+      const list = filtered.value;
+      const step = key === 'ArrowRight' ? 1 : -1;
+      let idx = list.findIndex(x => x.id === views.value[i].item.id);
+      // 跳过已经在查看区里的图片
+      for (let n = 0; n < list.length; n++) {
+        idx = (idx + step + list.length) % list.length;
+        if (!viewOrder.value.has(list[idx].id)) return replaceView(i, list[idx]);
+      }
+    }
+
+    let resizeObserver;
+    onMounted(() => {
+      window.addEventListener('keydown', onKeydown);
+      resizeObserver = new ResizeObserver(([en]) => {
+        viewerSize.w = en.contentRect.width;
+        viewerSize.h = en.contentRect.height;
+      });
+      resizeObserver.observe(viewerEl.value);
+    });
+    onBeforeUnmount(() => {
+      window.removeEventListener('keydown', onKeydown);
+      resizeObserver.disconnect();
+    });
+
+    return {
+      zhCn: ElementPlusLocaleZhCn, MAX_VIEW, GROUPS, canPickDir,
+      folderInput, viewerEl, cardsEl, folderName, includeSub, keyword, tab, linked, views, activeIndex,
+      images, counts, pickedList, filtered, viewOrder, groupLabel, cardStyle, imgStyle,
+      pickFolder, onFolderChange, markView, togglePick, trashView, onExport,
+      toggleView, removeView, clearViews,
+      resetView, resetAll, rotate, zoomBy, onWheel, onCardsWheel, onPointerDown, onPointerMove, onPointerUp,
+    };
+  },
+}).directive('thumb', vThumb).use(ElementPlus).mount('#app');
+</script>
 </body>
 </html>
